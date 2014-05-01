@@ -5,3 +5,4 @@
 #include <iostream> //replace later with fstream
 //#include <fstream>
 #include <cstdlib>
+#include <vector>

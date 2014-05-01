@@ -1,6 +1,6 @@
 Some time ago I  saw a YouTube video by biologist cdk007, located at https://www.youtube.com/watch?v=mcAq9bmCeR0 that took basic clock parts, and using straight up competition, created clocks via evolution.
 
-The work by cdk007 was a simulation designed in Matlab, and he challenged readers to redo the results in another language, just to show that this is not a feature of Matlab.  His implementation is in the Clock Evolution Functions folder..
+The work by cdk007 was a simulation designed in Matlab, and he challenged readers to redo the results in another language, just to show that this is not a feature of Matlab.  His implementation is in the Clock Evolution Functions folder.
 
 I am going to redo his application in C++.  Since I don't speak Matlab, there are probably going to be quite a few differences in our implementations.
 
@@ -8,7 +8,7 @@ Here are the files, and brief description of them.
 
 User headers
 stdafx.h - header file containing all the other header files.
-Clock.h - header file containing declairations of the clock class.
+Clock.h - header file containing declarations of the clock class.
 
 User Cpp files
 Clock.cpp - contains code for the clock class.
