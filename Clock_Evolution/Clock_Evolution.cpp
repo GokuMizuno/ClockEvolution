@@ -16,27 +16,8 @@ int main()
 	vector<Clock> clocklist;  //or is it vector<int> clocklist
 	clocklist.reserve(10000);
 
-/*	cout << "Is this:\n (1)A new project\n (2)An existing project?\n";
-	cin >> proj;
-	if (proj == 2)
-	{  Load();  }
-	else if (proj == 1)*/
-		fstream myfile;
-	myfile.open("matrix test.txt", ios::out);
-	if(myfile)
-	{
-		for(int i=1;i<3;i++)
-		{
-			Clock clk(0,i);
-			myfile << clk.show();
-		}
-	}
-	myfile.close();
-/*	else
-	{
-		cout << "Input unexpected, terminating.  Oh those poor, wasted CPU cycles.\n";
-		_exit(1);
-	}*/
+	/*See if the project is new, or being loaded
+	  If loaded, get load function from SaveLoad.cpp*/
 
 	/*There are 10000 clocks in the pool, and we will call a generation done once 10000 matings have been performed.
 	The program will terminate after 10,000 generations.  Matings will be done via straight up competition.  We take
@@ -75,16 +56,4 @@ int main()
 	//cout << "Press the t key, then enter, to continue...\n";
 	//cin >> proj;
 	return 0;
-}
-	
-
-float mrand()
-{
-	float u = ((float)rand()/(RAND_MAX))*2-1;
-	float v = ((float)rand()/(RAND_MAX))*2-1;
-	float r = u*u + v*v;
-	if ((r==0)||(r>1))
-		return r;
-	float c = sqrt(-2 * log(r)/r);
-	return r;
 }

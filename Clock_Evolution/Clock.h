@@ -12,11 +12,19 @@ public:
 	int arms;
 	int generation;
 	double score;
+
+	void Clock();
+	void ~Clock();
+	void Show();
 private:
 	double mrand();
-	double genome[40][41];
+	double genome[40][100];
 	int isBound;
 	//pathfinding alg.
 	//time accuracy.
 };
+
+Clock::Clock();  //constructor
+Clock::~Clock(); //destructor
+Clock::Show();   //debugging
 #endif

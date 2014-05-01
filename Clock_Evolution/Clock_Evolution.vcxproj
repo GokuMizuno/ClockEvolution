@@ -62,6 +62,7 @@
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Clock_Evolution.cpp" />
+    <ClCompile Include="SaveLoad.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />

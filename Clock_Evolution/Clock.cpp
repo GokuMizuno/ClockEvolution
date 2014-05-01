@@ -1,28 +1,33 @@
-#include "Clock.h";
+#include "Clogenome.h";
+#include <cmath>  //needed for rand()
 
-class Clock {
+class Clogenome {
 private:
-	/*Structure of the clock matrix
-	30 gears:	rows 1:30	columns 1:40
+	/*Structure of the clogenome matrix
+	30 gears:	rows 0:29	columns 0:39
 	if the cell is 1, it is connected by teeth, 2 by axle, 0 = all else
 	columns 41:100 hold number of teeth
-	7 hands:	rows 31:37	columns 1:40 = connectivity
-	1 ratchet:	row 38		columns 1:40 = connectivity
-	1 spring:	row 39		columns 1:40 = connectivity
-	1 base:		row 40		columns 1:40 = connectivity
+	7 hands:	rows 30:36	columns 0:39 = connectivity
+	1 ratchet:	row 37		columns 0:39 = connectivity
+	1 spring:	row 38		columns 0:39 = connectivity
+	1 base:		row 39		columns 0:39 = connectivity
 	*/
-	double genome[40][41];
+	double genome[40][100];
 	double mrand();
 public:
-	int gen, num; //gen is the clock creation generation, num is the number 1-1000 of the clock.
-	float time, score[7];
-	Clock(bool, int); //Default constructor: 0 is create new, 1 is load from a file
-//	~Clock();
-	void show(void);
-	float eval(void);
+	bool flag;
+	int pendula;
+	int arms;
+	int generation; //gen is the clogenome creation generation
+	double score;
+//	float time, score[7];
+	Clogenome(); //Default constructor
+//	~Clogenome();
+//	void show(void);
+//	float eval(void);
 };
 
-Clock::Clock(bool create, int i)
+Clogenome::Clogenome(bool create, int i) //default constructor
 {
 	/*The cells of the matrix are loaded with mrand(), and manipulated to read 1.0, 2.0, or 0.0 as needed.
 	Using a standard mrand() Gaussian distro, all objects with > 3 sigma are given a value of 2.0,
@@ -33,11 +38,11 @@ Clock::Clock(bool create, int i)
 	0.06 to 0.10 became 2, and everything else mapped to 0.
 	*/
 
-	/*Ways to cheat:  Just use three clocks and constantly compare.
-	The use of k>=j makes the matrices bidirectional. by setting ck[j][k] = ck[k][j].
-	Check gears to make sure number of teeth are greater than items connected to them.*/
+	/*Ways to cheat:  Just use three clogenomes and constantly compare.
+	The use of k>=j makes the matrices bidirectional. by setting genome[j][k] = genome[k][j].
+	Chegenome gears to make sure number of teeth are greater than items connected to them.*/
 /*	new int num, gen;
-	new float ck[40][41];
+	new float genome[40][41];
 	new float time, score[7];*/
 	//This is merely the create function below
 	if(create == 0)
@@ -50,33 +55,33 @@ Clock::Clock(bool create, int i)
 			{
 				if(k == 40)
 				{
-					ck[j][k] = (int)(mrand()*100); //# of teeth/gear <=100
-					//checks numbers of gears vs. teeth in gears
+					genome[j][k] = (int)(mrand()*100); //# of teeth/gear <=100
+					//chegenomes numbers of gears vs. teeth in gears
 					for(int l=0;l<40;l++)
 					{
 						float sum=0;
-						sum += ck[j][l];
-						if(ck[j][40] < sum)
-							ck[j][40] = sum;
+						sum += genome[j][l];
+						if(genome[j][40] < sum)
+							genome[j][40] = sum;
 					}
 				}
 				else
 				{
-					ck[j][k] = mrand();
-					if(ck[j][k] > 0.997)
+					genome[j][k] = mrand();
+					if(genome[j][k] > 0.997)
 					{
-						ck[j][k] = 2.0;
-						ck[k][j] = 2.0;
+						genome[j][k] = 2.0;
+						genome[k][j] = 2.0;
 					}
-					else if(ck[j][k] > 0.954)
+					else if(genome[j][k] > 0.954)
 					{
-						ck[j][k] = 1.0;
-						ck[k][j] = 1.0;
+						genome[j][k] = 1.0;
+						genome[k][j] = 1.0;
 					}
 					else
 					{
-						ck[j][k] = 0.0;
-						ck[k][j] = 0.0;
+						genome[j][k] = 0.0;
+						genome[k][j] = 0.0;
 					}
 				}
 			}
@@ -88,35 +93,46 @@ Clock::Clock(bool create, int i)
 	};
 }
 
-/*Clock::~Clock()
+/*Clogenome::~Clogenome()
 {
-	delete float ck[40][41];
+	delete float genome[40][41];
 	delete int gen, num;
 	delete float time, score[6];
 }*/
 
-void Clock::show(void)
+void Clogenome::show(void)
 {
 	for(int i=0;i<40;i++)
 	{
-		for(int j=0;j<41;j++)
+		for(int j=0;j<100;j++)
 		{
-			cout << ck[i][j] << '\t';
+			std::cout << genome[i][j] << '\t';
 		}
-		cout << endl;
+		std::cout << std::endl;
 	}
 }
 
-float Clock::eval(void)
+float Clogenome::eval(void)
 {
 	/*score[0] stores the total number of intersections between components.  More intersections mean more complexity
-	and more complexity means more energy goes into building the device.  All else being equal. the clock with the
+	and more complexity means more energy goes into building the device.  All else being equal. the clogenome with the
 	less complexity wins
 	Scores 1-6 are used to hold the object d'art's scores for seconds, minutes, hours, days, weeks, and years.
 	The more accurate, the higher the score.  Pendula are base ranked, and hands provide a score modifier.  The
-	pendulum provides the base motion, without one, there is no clock.  Circuits are evaluated to modify gear
-	ratios as evolutionary advantagious to provide a better clock.*/
+	pendulum provides the base motion, without one, there is no clogenome.  Circuits are evaluated to modify gear
+	ratios as evolutionary advantagious to provide a better clogenome.*/
 	bool pendula = false;
 
 	//aaa;
+}
+
+float mrand()
+{
+	float u = ((float)rand()/(RAND_MAX))*2-1;
+	float v = ((float)rand()/(RAND_MAX))*2-1;
+	float r = u*u + v*v;
+	if ((r==0)||(r>1))
+		return r;
+	float c = sqrt(-2 * log(r)/r);
+	return r;
 }
