@@ -1,9 +1,9 @@
-#include "Clogenome.h";
+#include "Clock.h";
 #include <cmath>  //needed for rand()
 
-class Clogenome {
+class Clock {
 private:
-	/*Structure of the clogenome matrix
+	/*Structure of the Clock matrix
 	30 gears:	rows 0:29	columns 0:39
 	if the cell is 1, it is connected by teeth, 2 by axle, 0 = all else
 	columns 41:100 hold number of teeth
@@ -18,16 +18,16 @@ public:
 	bool flag;
 	int pendula;
 	int arms;
-	int generation; //gen is the clogenome creation generation
+	int generation; //gen is the Clock creation generation
 	double score;
 //	float time, score[7];
-	Clogenome(); //Default constructor
-//	~Clogenome();
+	Clock(); //Default constructor
+//	~Clock();
 //	void show(void);
 //	float eval(void);
 };
 
-Clogenome::Clogenome(bool create, int i) //default constructor
+Clock::Clock(bool create, int i) //default constructor
 {
 	/*The cells of the matrix are loaded with mrand(), and manipulated to read 1.0, 2.0, or 0.0 as needed.
 	Using a standard mrand() Gaussian distro, all objects with > 3 sigma are given a value of 2.0,
@@ -38,7 +38,7 @@ Clogenome::Clogenome(bool create, int i) //default constructor
 	0.06 to 0.10 became 2, and everything else mapped to 0.
 	*/
 
-	/*Ways to cheat:  Just use three clogenomes and constantly compare.
+	/*Ways to cheat:  Just use three Clocks and constantly compare.
 	The use of k>=j makes the matrices bidirectional. by setting genome[j][k] = genome[k][j].
 	Chegenome gears to make sure number of teeth are greater than items connected to them.*/
 /*	new int num, gen;
@@ -93,14 +93,14 @@ Clogenome::Clogenome(bool create, int i) //default constructor
 	};
 }
 
-/*Clogenome::~Clogenome()
+/*Clock::~Clock()
 {
 	delete float genome[40][41];
 	delete int gen, num;
 	delete float time, score[6];
 }*/
 
-void Clogenome::show(void)
+void Clock::show(void)
 {
 	for(int i=0;i<40;i++)
 	{
@@ -112,15 +112,15 @@ void Clogenome::show(void)
 	}
 }
 
-float Clogenome::eval(void)
+float Clock::eval(void)
 {
 	/*score[0] stores the total number of intersections between components.  More intersections mean more complexity
-	and more complexity means more energy goes into building the device.  All else being equal. the clogenome with the
+	and more complexity means more energy goes into building the device.  All else being equal. the Clock with the
 	less complexity wins
 	Scores 1-6 are used to hold the object d'art's scores for seconds, minutes, hours, days, weeks, and years.
 	The more accurate, the higher the score.  Pendula are base ranked, and hands provide a score modifier.  The
-	pendulum provides the base motion, without one, there is no clogenome.  Circuits are evaluated to modify gear
-	ratios as evolutionary advantagious to provide a better clogenome.*/
+	pendulum provides the base motion, without one, there is no Clock.  Circuits are evaluated to modify gear
+	ratios as evolutionary advantagious to provide a better Clock.*/
 	bool pendula = false;
 
 	//aaa;
