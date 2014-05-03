@@ -24,12 +24,18 @@
     <ClCompile Include="SaveLoad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stdfax.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

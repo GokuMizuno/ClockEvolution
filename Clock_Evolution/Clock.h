@@ -13,24 +13,33 @@ public:
 	  Headers should only be used for declarations.
 	  Do not define functions.
 	  Headers should have a specific purpose.*/
-	bool flag = 0;
 	int pendula;
 	int arms;
-	int generation;
 	double score;
 
 	void Clock();
 	void ~Clock();
-	void show();
+	void show()
+	int Generation();
+	bool isLocked();
+	bool Lock();
+	bool Unlock();
 private:
+	bool flag;
 	double mrand();
 	double genome[40][100];
 	int isBound;
+	int generation;
 	//pathfinding alg.
 	//time accuracy.
 };
 
 Clock::Clock();  //constructor
 Clock::~Clock(); //destructor
-void Clock::show()    //debugging
+Clock::show();   //debugging
+int Generation()  {  return generation;  }
+bool isLocked()  {  return flag;  }
+bool Lock()  {  flag = 1;  }
+bool Unlock()  {  flag = 0;  }
+
 #endif

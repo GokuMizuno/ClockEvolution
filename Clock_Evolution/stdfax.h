@@ -1,4 +1,5 @@
-#include "Clock.h"
+#include "clock.h"
+#include "mate.h"
 
 #include <cmath>
 #include <time.h>
