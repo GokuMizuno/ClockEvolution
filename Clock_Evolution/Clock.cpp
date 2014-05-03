@@ -1,12 +1,13 @@
 #include "Clock.h";
 #include <cmath>  //needed for rand()
+#include <iostream> //needed for debugging in Clock::show()
 
 class Clock {
 private:
 	/*Structure of the Clock matrix
 	30 gears:	rows 0:29	columns 0:39
 	if the cell is 1, it is connected by teeth, 2 by axle, 0 = all else
-	columns 41:100 hold number of teeth
+	columns 40:99 hold number of teeth
 	7 hands:	rows 30:36	columns 0:39 = connectivity
 	1 ratchet:	row 37		columns 0:39 = connectivity
 	1 spring:	row 38		columns 0:39 = connectivity
@@ -27,7 +28,7 @@ public:
 //	float eval(void);
 };
 
-Clock::Clock(bool create, int i) //default constructor
+Clock::Clock() //default constructor
 {
 	/*The cells of the matrix are loaded with mrand(), and manipulated to read 1.0, 2.0, or 0.0 as needed.
 	Using a standard mrand() Gaussian distro, all objects with > 3 sigma are given a value of 2.0,
@@ -38,59 +39,50 @@ Clock::Clock(bool create, int i) //default constructor
 	0.06 to 0.10 became 2, and everything else mapped to 0.
 	*/
 
-	/*Ways to cheat:  Just use three Clocks and constantly compare.
-	The use of k>=j makes the matrices bidirectional. by setting genome[j][k] = genome[k][j].
-	Chegenome gears to make sure number of teeth are greater than items connected to them.*/
+	/*Check gears to make sure number of teeth are greater than items connected to them.
+	For k<40, genome[j][k] = genome[k][j]*/
 /*	new int num, gen;
 	new float genome[40][41];
 	new float time, score[7];*/
 	//This is merely the create function below
-	if(create == 0)
+	for(int j=0;j<40;j++) //rows
 	{
-		num = i;
-		gen = 1;
-		for(int j=0;j<40;j++)
+		for(int k=0;k<100;k++) //columns
 		{
-			for(int k=j;k<41;k++)
+			if(k >= 40)
 			{
-				if(k == 40)
+				genome[j][k] = (int)(mrand()*100); //# of teeth per gear <=100
+				//check numbers of gears vs. teeth in gears
+				for(int l=0;l<40;l++)
 				{
-					genome[j][k] = (int)(mrand()*100); //# of teeth/gear <=100
-					//chegenomes numbers of gears vs. teeth in gears
-					for(int l=0;l<40;l++)
-					{
-						float sum=0;
-						sum += genome[j][l];
-						if(genome[j][40] < sum)
-							genome[j][40] = sum;
-					}
+					float sum=0;
+					sum += genome[j][l];
+					if(genome[j][40] < sum)
+						genome[j][40] = sum;
+				}
+			}
+			else
+			{
+				genome[j][k] = mrand();
+				if(genome[j][k] > 0.997)
+				{
+					genome[j][k] = 2.0;
+					genome[k][j] = 2.0;
+				}
+				else if(genome[j][k] > 0.954)
+				{
+					genome[j][k] = 1.0;
+					genome[k][j] = 1.0;
 				}
 				else
 				{
-					genome[j][k] = mrand();
-					if(genome[j][k] > 0.997)
-					{
-						genome[j][k] = 2.0;
-						genome[k][j] = 2.0;
-					}
-					else if(genome[j][k] > 0.954)
-					{
-						genome[j][k] = 1.0;
-						genome[k][j] = 1.0;
-					}
-					else
-					{
-						genome[j][k] = 0.0;
-						genome[k][j] = 0.0;
-					}
+					genome[j][k] = 0.0;
+					genome[k][j] = 0.0;
 				}
 			}
+			
 		}
 	}
-	else //create == 1
-	{
-		//other stuff
-	};
 }
 
 /*Clock::~Clock()

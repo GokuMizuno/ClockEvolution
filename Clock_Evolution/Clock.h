@@ -7,6 +7,12 @@ class Clock()
 public:
 	/*flag:  0 = free, 1 = being used (compared, mated, or mutated.)
 	  Lock when starting to use, unlock when done.*/
+	/*Best practices:
+	  Include header guards
+	  Do not declare non constant vars in headers.
+	  Headers should only be used for declarations.
+	  Do not define functions.
+	  Headers should have a specific purpose.*/
 	bool flag = 0;
 	int pendula;
 	int arms;
@@ -15,7 +21,7 @@ public:
 
 	void Clock();
 	void ~Clock();
-	void Show();
+	void show()
 private:
 	double mrand();
 	double genome[40][100];
@@ -26,5 +32,5 @@ private:
 
 Clock::Clock();  //constructor
 Clock::~Clock(); //destructor
-Clock::Show();   //debugging
+Clock::show();   //debugging
 #endif
