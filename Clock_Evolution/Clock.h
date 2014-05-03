@@ -21,7 +21,7 @@ public:
 
 	void Clock();
 	void ~Clock();
-	void show()
+	void show();
 private:
 	double mrand();
 	double genome[40][100];
@@ -32,5 +32,5 @@ private:
 
 Clock::Clock();  //constructor
 Clock::~Clock(); //destructor
-Clock::show();   //debugging
+void Clock::show()    //debugging
 #endif
