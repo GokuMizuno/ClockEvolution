@@ -1,32 +1,7 @@
-#include "Clock.h";
+#include "Clock.h"
 #include <cmath>  //needed for rand()
 #include <iostream> //needed for debugging in Clock::show()
 
-class Clock {
-private:
-	/*Structure of the Clock matrix
-	30 gears:	rows 0:29	columns 0:39
-	if the cell is 1, it is connected by teeth, 2 by axle, 0 = all else
-	columns 40:99 hold number of teeth
-	7 hands:	rows 30:36	columns 0:39 = connectivity
-	1 ratchet:	row 37		columns 0:39 = connectivity
-	1 spring:	row 38		columns 0:39 = connectivity
-	1 base:		row 39		columns 0:39 = connectivity
-	*/
-	double genome[40][100];
-	double mrand();
-public:
-	bool flag;
-	int pendula;
-	int arms;
-	int generation; //gen is the Clock creation generation
-	double score;
-//	float time, score[7];
-	Clock(); //Default constructor
-//	~Clock();
-//	void show(void);
-//	float eval(void);
-};
 
 Clock::Clock() //default constructor
 {
@@ -116,6 +91,20 @@ float Clock::eval(void)
 	bool pendula = false;
 
 	//aaa;
+}
+
+int Generation()  {  return generation;  }
+bool isLocked()  {  return flag;  }
+bool Lock()  {  flag = 1;  }
+bool Unlock()  {  flag = 0;  }
+
+double Clock::Score()
+{
+	/*An arm is worth more than a pendula
+	  A pendula is worth more than nothing
+	  A perfectly accureate pendula is worth 1.0
+	  Bound gears make score == 0
+	  Each arm/pendula is worth some multiplier* how accurate it is*/
 }
 
 float mrand()

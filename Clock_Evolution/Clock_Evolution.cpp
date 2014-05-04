@@ -1,4 +1,4 @@
-#include "stdfax.h";
+#include "stdfax.h"
 using std::vector;
 
 int main()

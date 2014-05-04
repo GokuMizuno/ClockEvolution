@@ -1,4 +1,4 @@
-#include "stdfax.h";
+#include "stdfax.h"
 
 /*	cout << "Is this:\n (1)A new project\n (2)An existing project?\n";
 	cin >> proj;

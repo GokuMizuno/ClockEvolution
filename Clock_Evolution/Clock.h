@@ -2,7 +2,7 @@
 #define CLOCK_H
 /*This holds the declarations of the clock class, which is in Clock.cpp*/
 
-class Clock()
+class Clock
 {
 public:
 	/*flag:  0 = free, 1 = being used (compared, mated, or mutated.)
@@ -13,33 +13,26 @@ public:
 	  Headers should only be used for declarations.
 	  Do not define functions.
 	  Headers should have a specific purpose.*/
-	int pendula;
-	int arms;
-	double score;
-
-	void Clock();
-	void ~Clock();
-	void show()
+	Clock();	//constructor
+	~Clock();	//destructor
+	void show();//debugging
 	int Generation();
 	bool isLocked();
 	bool Lock();
 	bool Unlock();
+	double Score();
+	friend mate(Clock, Clock);
 private:
 	bool flag;
 	double mrand();
 	double genome[40][100];
 	int isBound;
 	int generation;
+	int pendula;
+	int arms;
+	double score;
 	//pathfinding alg.
 	//time accuracy.
 };
-
-Clock::Clock();  //constructor
-Clock::~Clock(); //destructor
-Clock::show();   //debugging
-int Generation()  {  return generation;  }
-bool isLocked()  {  return flag;  }
-bool Lock()  {  flag = 1;  }
-bool Unlock()  {  flag = 0;  }
 
 #endif
