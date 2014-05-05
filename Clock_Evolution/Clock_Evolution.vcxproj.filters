@@ -35,8 +35,5 @@
     <ClInclude Include="stdfax.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

@@ -30,7 +30,7 @@ Clock::Clock() //default constructor
 				//check numbers of gears vs. teeth in gears
 				for(int l=0;l<40;l++)
 				{
-					float sum=0;
+					double sum=0;
 					sum += genome[j][l];
 					if(genome[j][40] < sum)
 						genome[j][40] = sum;
@@ -60,12 +60,12 @@ Clock::Clock() //default constructor
 	}
 }
 
-/*Clock::~Clock()
+Clock::~Clock()
 {
-	delete float genome[40][41];
-	delete int gen, num;
-	delete float time, score[6];
-}*/
+//	delete float genome[40][41];
+//	delete int gen, num;
+//	delete float time, score[6];
+}
 
 void Clock::show(void)
 {
@@ -79,7 +79,7 @@ void Clock::show(void)
 	}
 }
 
-float Clock::eval(void)
+/*float Clock::eval(void)
 {
 	/*score[0] stores the total number of intersections between components.  More intersections mean more complexity
 	and more complexity means more energy goes into building the device.  All else being equal. the Clock with the
@@ -88,15 +88,15 @@ float Clock::eval(void)
 	The more accurate, the higher the score.  Pendula are base ranked, and hands provide a score modifier.  The
 	pendulum provides the base motion, without one, there is no Clock.  Circuits are evaluated to modify gear
 	ratios as evolutionary advantagious to provide a better Clock.*/
-	bool pendula = false;
+/*	bool pendula = false;
 
 	//aaa;
-}
+}*/
 
-int Generation()  {  return generation;  }
-bool isLocked()  {  return flag;  }
-bool Lock()  {  flag = 1;  }
-bool Unlock()  {  flag = 0;  }
+int Clock::Generation()  {  return generation;  }
+bool Clock::isLocked()  {  return flag;  }
+void Clock::Lock()  {  flag = 1;  }
+void Clock::Unlock()  {  flag = 0;  }
 
 double Clock::Score()
 {
@@ -105,15 +105,17 @@ double Clock::Score()
 	  A perfectly accureate pendula is worth 1.0
 	  Bound gears make score == 0
 	  Each arm/pendula is worth some multiplier* how accurate it is*/
+	//this must return a value, for the moment, it returns 6;
+	return 6.0;
 }
 
-float mrand()
+double Clock::mrand()
 {
-	float u = ((float)rand()/(RAND_MAX))*2-1;
-	float v = ((float)rand()/(RAND_MAX))*2-1;
-	float r = u*u + v*v;
+	double u = ((float)rand()/(RAND_MAX))*2-1;
+	double v = ((float)rand()/(RAND_MAX))*2-1;
+	double r = u*u + v*v;
 	if ((r==0)||(r>1))
 		return r;
-	float c = sqrt(-2 * log(r)/r);
+	double c = sqrt(-2 * log(r)/r);
 	return r;
 }

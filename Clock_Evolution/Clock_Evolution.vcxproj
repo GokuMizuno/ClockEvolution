@@ -67,7 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
-    <ClInclude Include="Mate.h" />
     <ClInclude Include="stdfax.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -5,7 +5,7 @@
 	if (proj == 2)
 	{  Load();  }
 	else if (proj == 1)*/
-		fstream myfile;
+/*		fstream myfile;
 	myfile.open("matrix test.txt", ios::out);
 	if(myfile)
 	{

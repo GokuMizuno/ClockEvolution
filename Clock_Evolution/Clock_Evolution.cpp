@@ -52,7 +52,8 @@ int main()
 		aaa;
 	}
 */
-
+	Clock clock1;
+	clock1.show();
 	//cout << "Press the t key, then enter, to continue...\n";
 	//cin >> proj;
 	return 0;

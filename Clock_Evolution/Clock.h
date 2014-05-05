@@ -18,10 +18,11 @@ public:
 	void show();//debugging
 	int Generation();
 	bool isLocked();
-	bool Lock();
-	bool Unlock();
+	void Lock();
+	void Unlock();
 	double Score();
-	friend mate(Clock, Clock);
+	friend Clock mate(Clock, Clock);
+	friend Clock mutate(Clock&);
 private:
 	bool flag;
 	double mrand();
