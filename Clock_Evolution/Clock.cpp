@@ -20,14 +20,16 @@ Clock::Clock() //default constructor
 	new float genome[40][41];
 	new float time, score[7];*/
 	//This is merely the create function below
-	for(int j=0;j<40;j++) //rows
+	for(int j=0;j<rows;j++) //rows
 	{
-		for(int k=0;k<100;k++) //columns
+		for(int k=0;k<columns;k++) //columns
 		{
 			if(k >= 40)
 			{
 				genome[j][k] = (int)(mrand()*100); //# of teeth per gear <=100
 				//check numbers of gears vs. teeth in gears
+				//As of V 0.1, this doesn't quite work.  FIX
+				//# teeth can be >100, <200.  Issue suspected with mrand().
 				for(int l=0;l<40;l++)
 				{
 					double sum=0;
@@ -69,9 +71,9 @@ Clock::~Clock()
 
 void Clock::show(void)
 {
-	for(int i=0;i<40;i++)
+	for(int i=0;i<rows;i++)
 	{
-		for(int j=0;j<100;j++)
+		for(int j=0;j<columns;j++)
 		{
 			std::cout << genome[i][j] << '\t';
 		}
@@ -102,7 +104,7 @@ double Clock::Score()
 {
 	/*An arm is worth more than a pendula
 	  A pendula is worth more than nothing
-	  A perfectly accureate pendula is worth 1.0
+	  A perfectly accurate pendula is worth 1.0
 	  Bound gears make score == 0
 	  Each arm/pendula is worth some multiplier* how accurate it is*/
 	//this must return a value, for the moment, it returns 6;
@@ -114,8 +116,7 @@ double Clock::mrand()
 	double u = ((float)rand()/(RAND_MAX))*2-1;
 	double v = ((float)rand()/(RAND_MAX))*2-1;
 	double r = u*u + v*v;
-	if ((r==0)||(r>1))
-		return r;
+	if ((r==0)||(r>1))  return r;
 	double c = sqrt(-2 * log(r)/r);
-	return r;
+	return c;
 }

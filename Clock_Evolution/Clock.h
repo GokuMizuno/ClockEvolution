@@ -21,8 +21,10 @@ public:
 	void Lock();
 	void Unlock();
 	double Score();
-	friend Clock mate(Clock, Clock);
+	friend Clock mate(Clock&, Clock&, Clock&);
 	friend Clock mutate(Clock&);
+	const int rows = 40;
+	const int columns = 100;
 private:
 	bool flag;
 	double mrand();
