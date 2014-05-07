@@ -1,6 +1,8 @@
 #include "stdfax.h"
 using std::vector;
 
+double round(double);
+
 int main()
 {
 	//Initialize random number generator from cstdlib
@@ -57,4 +59,16 @@ int main()
 	//cout << "Press the t key, then enter, to continue...\n";
 	//cin >> proj;
 	return 0;
+}
+
+double round(double num)
+{
+	if(num < 0)
+		return 0;
+	if((num > 0)&&(num <= 0.5))
+		return 0;
+	if((num > 0.5)&&(num < 1))
+		return 1;
+	if(num > 1)
+		return 1;
 }
