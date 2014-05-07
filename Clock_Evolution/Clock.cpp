@@ -114,6 +114,6 @@ double Clock::mrand()
 	double v = ((float)rand()/(RAND_MAX))*2-1;
 	double r = u*u + v*v;
 	if ((r==0)||(r>1))  return r;
-	double c = sqrt(-2 * log(r)/r);
+	double c = sqrt(2 * log(r)/r);
 	return c;
 }

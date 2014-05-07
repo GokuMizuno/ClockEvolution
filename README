@@ -4,6 +4,18 @@ The work by cdk007 was a simulation designed in Matlab, and he challenged reader
 
 I am going to redo his application in C++.  Since I don't speak Matlab, there are probably going to be quite a few differences in our implementations.
 
+V0.1
+Clock::Clock works.
+Clock::show() works.
+Clock::Generation() works.
+Clock::isLocked() works.
+Clock::Lock() works.
+Clock::Unlock works.
+need to replace mrand() with a normal distro.
+
+Score, mate, mutate do not work or are not tested.
+Unable to save, yet.
+
 Here are the files, and brief description of them.
 
 User headers
@@ -12,10 +24,15 @@ Clock.h - header file containing declarations of the clock class.
 
 User Cpp files
 Clock.cpp - contains code for the clock class.
+Mate.cpp - contains the mate and mutate functions
 
 Pre-built headers
 iostream - handles terminal input and output
 fstream - reads/writes to a file.  Contains iostream.
+cmath - needed for log() function in mrand()
+time.h - needed to seed rand() function
+cstdlib - needed for rand() function
+vector - needed for vector that holds list of clock object pointers for quick access
 
 TODO:
 Get program actually working.

@@ -10,18 +10,20 @@
   Aftr mating, apply a mutation to the child's genome.*/
 
 //change all of this to deal with pointers
+
+double round(double);
+
 Clock mate(Clock &c1, Clock &c2, Clock &c3)
 {
 	int i,j,k;
 	int generation;
 	generation = (c1.Generation() > c2.Generation()) ? c1.Generation() : c2.Generation();
 	generation++; //gen is one higher than the highest gen parent.
-	for(int i=0;i<Clock::rows;i++)  //this is not cool.  Fix it.
+	for(int i=0;i<Clock::rows;i++)
 	{
 		for(int j=0;j<Clock::columns;j++)
 		{
-			//rand()/RAND_MAX should be between 0 and 1.
-			if(round(rand()/RAND_MAX) == 0)
+			if(round((double)(rand()/RAND_MAX)) == 0)
 				c3.genome[i][j] = c1.genome[i][j];
 			else
 				c3.genome[i][j] = c2.genome[i][j];
@@ -41,9 +43,9 @@ Clock mutate(Clock &ck3)
 	int i,j;
 	i = rand() %(Clock::rows-1);
 	j = rand() %(Clock::columns-1);
-	if(round(rand()/RAND_MAX) <= 0.05)
+	if(round((double)(rand()/RAND_MAX)) <= 0.05)
 		c3.genome[i][j] = 1;
-	else if((round(rand()/RAND_MAX) <= 0.1)&&(round(rand()/RAND_MAX) >= 0.05))
+	else if((round((double)(rand()/RAND_MAX)) <= 0.1)&&(round((double)(rand()/RAND_MAX)) >= 0.05))
 		c3.genome[i][j] = 2;
 	else
 		c3.genome[i][j] = 0;
