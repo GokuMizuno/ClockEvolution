@@ -26,10 +26,7 @@ Clock::Clock() //default constructor
 		{
 			if(k >= 40)
 			{
-				genome[j][k] = (int)(mrand()*100); //# of teeth per gear <=100
-				//check numbers of gears vs. teeth in gears
-				//As of V 0.1, this doesn't quite work.  FIX
-				//# teeth can be >100, <200.  Issue suspected with mrand().
+				genome[j][k] = (rand()%100); //# of teeth per gear <=100
 				for(int l=0;l<40;l++)
 				{
 					double sum=0;

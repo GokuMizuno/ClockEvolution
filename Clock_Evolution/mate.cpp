@@ -3,10 +3,9 @@
   Since both are working with the genome of the function, both are
   friends, and hence, it seems natural they go together.*/
 
-
-/*Mating involves taking the genome of two clocks, and merging them somehow.
-  Some ideas are LHs of c1, RHs c2, top c1, bottom c2, completely random
-  Try and get an even mix of both parents.
+/*Mating involves taking the genome of two clocks, and merging them.
+  cdk007 uses a random matrix, mapped to either 0 or 1, and if 0, then
+  get genome from father, 1, get genome from mother.
   
   Aftr mating, apply a mutation to the child's genome.*/
 
@@ -17,9 +16,9 @@ Clock mate(Clock &c1, Clock &c2, Clock &c3)
 	int generation;
 	generation = (c1.Generation() > c2.Generation()) ? c1.Generation() : c2.Generation();
 	generation++; //gen is one higher than the highest gen parent.
-	for(int i=0;i<Clock.rows;i++)  //this is not cool.  Fix it.
+	for(int i=0;i<Clock::rows;i++)  //this is not cool.  Fix it.
 	{
-		for(int j=0;j<Clock.columns;j++)
+		for(int j=0;j<Clock::columns;j++)
 		{
 			//rand()/RAND_MAX should be between 0 and 1.
 			if(round(rand()/RAND_MAX) == 0)
@@ -40,8 +39,8 @@ Clock mutate(Clock &ck3)
 	//does the mutating.
 //	return &ck3;
 	int i,j;
-	i = rand(0,Clock.rows-1);
-	j = rand(0,Clock.columns-1);
+	i = rand() %(Clock::rows-1);
+	j = rand() %(Clock::columns-1);
 	if(round(rand()/RAND_MAX) <= 0.05)
 		c3.genome[i][j] = 1;
 	else if((round(rand()/RAND_MAX) <= 0.1)&&(round(rand()/RAND_MAX) >= 0.05))
