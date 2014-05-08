@@ -2,7 +2,6 @@
 #include <cmath>  //needed for rand()
 #include <iostream> //needed for debugging in Clock::show()
 
-
 Clock::Clock() //default constructor
 {
 	/*The cells of the matrix are loaded with mrand(), and manipulated to read 1.0, 2.0, or 0.0 as needed.
@@ -11,28 +10,41 @@ Clock::Clock() //default constructor
 	all cells, that is, gears, ratchets, et al, will do nothing, nor connect to anything.
 
 	In the original paper, rand() is a value between [0,1], and 0.06 or less became 1, whilst
-	0.06 to 0.10 became 2, and everything else mapped to 0.
+	0.06 to 0.10 became 2, and everything else mapped to 0.  Each gear gets between 4 and 100 teeth.
+
+	Structure of the clock matrix
+				row			column
+	30 gears:	0:29		0:39	for connectivity
+							40		number of teeth
+	7 hands		30:36		0:39	connectivity
+	1 ratchet	37			0:39	connectivity
+	1 spring	38			0:39	connectivity
+	1 base		39			0:39	connectivity
 	*/
 
 	/*Check gears to make sure number of teeth are greater than items connected to them.
-	For k<40, genome[j][k] = genome[k][j]*/
-/*	new int num, gen;
-	new float genome[40][41];
-	new float time, score[7];*/
+	For k<row, genome[j][k] = genome[k][j]*/
+
 	//This is merely the create function below
+	generation = 1;
+	flag = 0;
+	int cless = columns;
+	cless--;
 	for(int j=0;j<rows;j++) //rows
 	{
 		for(int k=0;k<columns;k++) //columns
 		{
-			if(k >= 40)
+			if(k == cless)
 			{
 				genome[j][k] = (rand()%100); //# of teeth per gear <=100
-				for(int l=0;l<40;l++)
+				if(genome[j][k] < 4)
+					genome[j][k] = 4;
+				for(int l=0;l<columns;l++)
 				{
 					double sum=0;
 					sum += genome[j][l];
-					if(genome[j][40] < sum)
-						genome[j][40] = sum;
+					if(genome[j][cless] < sum)
+						genome[j][cless] = sum;
 				}
 			}
 			else
@@ -61,9 +73,7 @@ Clock::Clock() //default constructor
 
 Clock::~Clock()
 {
-//	delete float genome[40][41];
-//	delete int gen, num;
-//	delete float time, score[6];
+
 }
 
 void Clock::show(void)
@@ -77,20 +87,6 @@ void Clock::show(void)
 		std::cout << std::endl;
 	}
 }
-
-/*float Clock::eval(void)
-{
-	/*score[0] stores the total number of intersections between components.  More intersections mean more complexity
-	and more complexity means more energy goes into building the device.  All else being equal. the Clock with the
-	less complexity wins
-	Scores 1-6 are used to hold the object d'art's scores for seconds, minutes, hours, days, weeks, and years.
-	The more accurate, the higher the score.  Pendula are base ranked, and hands provide a score modifier.  The
-	pendulum provides the base motion, without one, there is no Clock.  Circuits are evaluated to modify gear
-	ratios as evolutionary advantagious to provide a better Clock.*/
-/*	bool pendula = false;
-
-	//aaa;
-}*/
 
 int Clock::Generation()  {  return generation;  }
 bool Clock::isLocked()  {  return flag;  }
@@ -110,10 +106,12 @@ double Clock::Score()
 
 double Clock::mrand()
 {
-	double u = ((float)rand()/(RAND_MAX))*2-1;
-	double v = ((float)rand()/(RAND_MAX))*2-1;
-	double r = u*u + v*v;
-	if ((r==0)||(r>1))  return r;
-	double c = sqrt(2 * log(r)/r);
-	return c;
+	double u,v,r;
+	do
+	{
+		u = ((double)rand()/(RAND_MAX))*2-1;
+		v = ((double)rand()/(RAND_MAX))*2-1;
+		r = u*u + v*v;
+	}while(r>1);
+	return r;
 }

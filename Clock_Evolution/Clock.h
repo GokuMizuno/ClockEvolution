@@ -24,11 +24,11 @@ public:
 	friend Clock mate(Clock&, Clock&, Clock&);
 	friend Clock mutate(Clock&);
 	static const int rows = 40;
-	static const int columns = 100;
+	static const int columns = 41;
 private:
 	bool flag;
 	double mrand();
-	double genome[40][100];
+	double genome[rows][columns];
 	int isBound;
 	int generation;
 	int pendula;

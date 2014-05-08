@@ -12,12 +12,12 @@
 //change all of this to deal with pointers
 
 double round(double);
-
+/*
 Clock mate(Clock &c1, Clock &c2, Clock &c3)
 {
 	int i,j,k;
 	int generation;
-	generation = (c1.Generation() > c2.Generation()) ? c1.Generation() : c2.Generation();
+	generation = (c1.Generation() >= c2.Generation()) ? c1.Generation() : c2.Generation();
 	generation++; //gen is one higher than the highest gen parent.
 	for(int i=0;i<Clock::rows;i++)
 	{
@@ -51,3 +51,4 @@ Clock mutate(Clock &ck3)
 		c3.genome[i][j] = 0;
 	return ck3;  //needs to be &c3
 }
+*/

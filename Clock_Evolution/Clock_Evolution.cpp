@@ -32,10 +32,15 @@ int main()
 	//Save every 10 generations
 	//replace while loop with a for loop; title of save file contains gen. name.
 
-	Clock clock1;
-	clock1.show();
-	//cout << "Press the t key, then enter, to continue...\n";
-	//cin >> proj;
+/*	Clock *foo;
+	foo = new Clock[3];
+	for(int n=0;n<3;++n)
+	{
+		std::cout << "Clock " << n << std::endl;
+		foo[n].show();
+	}
+	delete[] foo;*/
+
 	return 0;
 }
 
@@ -43,10 +48,7 @@ double round(double num)
 {
 	/*Theoretically, num will be between [0,1], but we all know how well
 	  theory and reality mesh...
-	  (double)(rand()/RAND_MAX) was tested multiple times, and it always returned
-	  a value betwen [0,1]*/
-	if(num <= 0.5)
-		return 0.0;
-	if(num > 0.5)
-		return 1.0;
+	  (double)(rand()/RAND_MAX) will always return a value betwen [0,1]*/
+	if(num <= 0.5)  return 0.0;
+	else  return 1.0;
 }
