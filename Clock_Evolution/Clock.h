@@ -28,6 +28,7 @@ public:
 private:
 	bool flag;
 	double mrand();
+	void doPhysics();
 	double genome[rows][columns];
 	int isBound;
 	int generation;

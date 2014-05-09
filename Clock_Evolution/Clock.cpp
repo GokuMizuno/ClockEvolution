@@ -1,6 +1,4 @@
-#include "Clock.h"
-#include <cmath>  //needed for rand()
-#include <iostream> //needed for debugging in Clock::show()
+#include "stdfax.h"
 
 Clock::Clock() //default constructor
 {
@@ -28,8 +26,8 @@ Clock::Clock() //default constructor
 	//This is merely the create function below
 	generation = 1;
 	flag = 0;
-	int cless = columns;
-	cless--;
+	int cless = columns-1;
+	int rless = rows-1;
 	for(int j=0;j<rows;j++) //rows
 	{
 		for(int k=0;k<columns;k++) //columns
@@ -51,22 +49,12 @@ Clock::Clock() //default constructor
 			{
 				genome[j][k] = mrand();
 				if(genome[j][k] > 0.997)
-				{
 					genome[j][k] = 2.0;
-					genome[k][j] = 2.0;
-				}
 				else if(genome[j][k] > 0.954)
-				{
 					genome[j][k] = 1.0;
-					genome[k][j] = 1.0;
-				}
 				else
-				{
 					genome[j][k] = 0.0;
-					genome[k][j] = 0.0;
-				}
 			}
-			
 		}
 	}
 }
@@ -95,13 +83,18 @@ void Clock::Unlock()  {  flag = 0;  }
 
 double Clock::Score()
 {
+	double score, physics;
+	int gears, pendula, arms;  //number of each
+
+	score = 0;
 	/*An arm is worth more than a pendula
 	  A pendula is worth more than nothing
 	  A perfectly accurate pendula is worth 1.0
 	  Bound gears make score == 0
 	  Each arm/pendula is worth some multiplier* how accurate it is*/
-	//this must return a value, for the moment, it returns 6;
-	return 6.0;
+	/*First begin with a circuit algol.
+	  Then do time accuracy*/
+	return score;
 }
 
 double Clock::mrand()
@@ -114,4 +107,166 @@ double Clock::mrand()
 		r = u*u + v*v;
 	}while(r>1);
 	return r;
+}
+
+void Clock::doPhysics()
+{
+	/*Now that the genome has been made, time to make it conform to physics
+	  Starting from the bottom, we make sure that:
+	  Springs can only be attached to 4 items
+	  Ratchets can only be attached to 3 items
+	  Hands can only be attached to 4 items
+	  Gears can only be attached to as may items as they have teeth
+	  
+	  We get a list of connections for each object, then chose randomly from that list.
+	  After making sure that the bottom object is in conformance with the laws of physics,
+	  we use bidirectional connectivity to make sure that since A touches B, B touches A*/
+	int cless = columns-2;  //last column is used for #teeth/ger
+	int rless = rows-1;
+	std::vector<double> v;
+
+	/*Spring*/
+	int i=38;
+	v.reserve(5);
+	for(int j=cless;j<=0;j--) //double check to make sure this is cless or columns
+	{
+		int sum;
+		sum = genome[i][cless];
+		if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
+		{
+			v.push_back(j);
+		}
+		int qq = v.size();
+		while(qq > 4)
+		{
+			//get 4 random elements and pull them from v, then drop the rest
+			//-1 is to prevent genome[i][0] from mucking things up
+			v.at(rand()%v.size()) = -1;
+			qq--;
+		}
+
+		//the last thing we do is clear the vector
+		for(std::vector<double>::iterator it=v.end();it!=v.begin();it--)
+		{
+			if(*it != -1)
+			{
+				/*For some reason, VS2010 throws an error at genome[i][*it]*/
+				int q = *it;
+				genome[i][q] = 0;
+				genome[q][i] = 0;
+			}
+			v.pop_back();
+		}
+	}
+	/*Ratchets*/
+	int i=37;
+	v.reserve(5);
+	for(int j=cless;j<=0;j--)
+	{
+		int sum;
+		sum = genome[i][cless];
+		if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
+		{
+			v.push_back(j);
+		}
+		int qq = v.size();
+		while(qq > 3)
+		{
+			//get 3 random elements and pull them from v, then drop the rest
+			//-1 is to prevent genome[i][0] from mucking things up
+			//one element via the teeth, two via center
+			v.at(rand()%v.size()) = -1;
+			qq--;
+		}
+
+		//the last thing we do is clear the vector
+		for(std::vector<double>::iterator it=v.end();it!=v.begin();it--)
+		{
+			if(*it != -1)
+			{
+				/*For some reason, VS2010 throws an error at genome[i][*it]*/
+				int q = *it;
+				genome[i][q] = 0;
+				genome[q][i] = 0;
+			}
+			v.pop_back();
+		}
+	}
+
+	/*7 Hands*/
+	v.reserve(5);
+	for(int i=36;i>29;i--)
+	{
+		for(int j=cless;j<=0;j--)
+		{
+			int sum;
+			sum = genome[i][cless];
+			if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
+			{
+				v.push_back(j);
+			}
+			int qq = v.size();
+			while(qq > 4)
+			{
+			//get 4 random elements and pull them from v, then drop the rest
+			//-1 is to prevent genome[i][0] from mucking things up
+				v.at(rand()%v.size()) = -1;
+				qq--;
+			}
+
+		//the last thing we do is clear the vector
+			for(std::vector<double>::iterator it=v.end();it!=v.begin();it--)
+			{
+				if(*it != -1)
+				{
+				/*For some reason, VS2010 throws an error at genome[i][*it]*/
+					int q = *it;
+					genome[i][q] = 0;
+					genome[q][i] = 0;
+				}
+				v.pop_back();
+			}
+		}
+	}
+
+	/*Gears*/
+	v.reserve(5);
+	for(int i=29;i>=0;i--)
+	{
+		for(int j=cless;j<=0;j--)
+		{
+			int sum;
+			sum = genome[i][cless];
+			if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
+			{
+				v.push_back(j);
+			}
+			int qq = v.size();
+			while(qq > 4)
+			{
+			//get 4 random elements and pull them from v, then drop the rest
+			//-1 is to prevent genome[i][0] from mucking things up
+				v.at(rand()%v.size()) = -1;
+				qq--;
+			}
+
+		//the last thing we do is clear the vector
+			for(std::vector<double>::iterator it=v.end();it!=v.begin();it--)
+			{
+				if(*it != -1)
+				{
+				/*For some reason, VS2010 throws an error at genome[i][*it]*/
+					int q = *it;
+					genome[i][q] = 0;
+					genome[q][i] = 0;
+				}
+				v.pop_back();
+			}
+		}
+	}
+	/*Bidirectionality
+	  Start from bottom due to having already fixed the lower part of the matrix*/
+	for(int i =rless;i>0;i--)
+		for(int j = cless;j>0;j--)
+			genome[j][i] = genome[i][j];
 }

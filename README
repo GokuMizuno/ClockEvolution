@@ -5,13 +5,26 @@ The work by cdk007 was a simulation designed in Matlab, and he challenged reader
 I am going to redo his application in C++.  Since I don't speak Matlab, there are probably going to be quite a few differences in our implementations.
 
 V0.1
+
 Clock::Clock works.
+
 Clock::show() works.
+
 Clock::Generation() works.
+
 Clock::isLocked() works.
+
 Clock::Lock() works.
+
 Clock::Unlock works.
-need to replace mrand() with a normal distro.
+
+I need to replace mrand() with a normal distro.
+
+V 0.2
+
+mrand() now returns a number between [0,1]
+
+I can create multiple clock objects at once.
 
 Score, mate, mutate do not work or are not tested.
 Unable to save, yet.
