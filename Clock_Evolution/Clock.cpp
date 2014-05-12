@@ -106,21 +106,25 @@ double Clock::Score()
 	
 	//gconn2 = zeros(30);
 	//gconn2(conn(1:30,1:30)==2) = 2;
-	double gconn2[30][30];
+	//keep = 30x1 matrix of zeroes
+	//keep = zeros(30,1);
+	double gconn2[30][30], keep[30];
 	for(int i=0;i<30;i++)
+	{
 		for(int j=0;j<30;j++)
 		{
 			if(2 == genome[i][j])
-				gconn[i][j] = 2;
+				gconn2[i][j] = 2;
 			else
-				gconn[i][j] = 0;
+				gconn2[i][j] = 0;
 		}
-
-
+		keep[i] = 0;
+	}
+	
+	//find = provides an array of indices for nonzero elements in conn
 	/*
-keep = zeros(30,1);
-baseg = find(conn(40,1:30) ~= 0);
-keep(baseg) = 1;
+	baseg = find(conn(40,1:30) ~= 0);
+	keep(baseg) = 1;
 
 % The circuit_distance.m function finds the shortest path between every
 % pair of gears.
@@ -669,15 +673,11 @@ void Clock::doPhysics()
 }
 
 /*Is this going to be public or private?*/
-double Clock::circuit(double c, double primarynodes)
+double Clock::circuit(double c[30][30], double primarynodes[30]) //doublecheck primarynodes
 {
+	//since c,primarynodes are arrays, they are passed by address
 	/*Matlab code.  It will be translated line by line into C code.*/
 	/*
-	function x = circuit_distance(c,primarynodes)
-
-if nargin == 1
-    primarynodes = 1:length(c);
-end
 
 d = ones(size(c));
 dtemp = ones(length(c),1) * 1e6;
