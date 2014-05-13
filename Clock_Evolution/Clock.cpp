@@ -122,14 +122,19 @@ double Clock::Score()
 	}
 	
 	//find = provides an array of indices for nonzero elements in conn
+	//baseg = find(conn(40,1:30) ~= 0);
+	//keep(baseg) = 1;		no idea what this line does
+	for(int i=0;i<rows;i++)
+		for(int j=0;j<30;j++)
+			if((2 == genome[i][j])||(1 == genome[i][j]))
+				baseg[i][j] = i;
+	//double check to make sure i is the proper index to be saving
+	
+	//The circuit_distance.m function finds the shortest path between every
+	// pair of gears.
+	d2 = circuit(gconn2,baseg);
 	/*
-	baseg = find(conn(40,1:30) ~= 0);
-	keep(baseg) = 1;
-
-% The circuit_distance.m function finds the shortest path between every
-% pair of gears.
-d2 = circuit_distance(gconn2,baseg);
-d2 = d2{1};
+	d2 = d2{1};
 
 for g=1:length(baseg)
     keepg = ~isnan(d2(baseg(g),:));
