@@ -133,13 +133,13 @@ double Clock::Score()
 	//The circuit_distance.m function finds the shortest path between every
 	// pair of gears.
 	d2 = circuit(gconn2,baseg);
-	/*
-	d2 = d2{1};
-
-for g=1:length(baseg)
-    keepg = ~isnan(d2(baseg(g),:));
-    keep(keepg==1) = 1;
-end
+	//d2 = d2{1};		no idea what this line does
+	
+	//in an nxm array, length is n>m?n:m  equal to max(size(array))
+	for g=1:length(baseg)
+		keepg = ~isnan(d2(baseg(g),:));
+	keep(keepg==1) = 1;
+	end
 
 conn(40,keep==1) = 1;
 
@@ -152,12 +152,12 @@ for r=1:30
     end
 end
 
-% Check for a pendulum: a hand that is attached to the base
+/* Check for a pendulum: a hand that is attached to the base
 % that hand may be attached to a gear, but that gear cannot
 % be attached to anything else. In this simple simulation a pendulum is
 % the only form that can create regular motion, this is a simple fact.
 % If we don't find one there is no need to go on as the clock will not
-% work no matter how the remaining components are connected.
+% work no matter how the remaining components are connected.*/
 p_count = 0;
 pend = [];
 for h = 31:37
@@ -219,12 +219,12 @@ end
 score(score > 1e6) = 1e6;
 output{2} = sum(score);
   
-% Let's search foward from the pendulum. The only way a pendulum can
+/* Let's search foward from the pendulum. The only way a pendulum can
 % transfer motion to gears is through a ratchet. We are not constraining
 % who connects where but if things don't line up in a functional way the
 % clock won't work and there is no need continuing the simulation. We
 % onlt simulate as far as we need to go. This saves computer time and
-% makes the code more compact.
+% makes the code more compact.*/
 g = [];
 gr = [];
 gs = [];
@@ -271,13 +271,13 @@ else
     return
 end
 output{3} = 3;
-% If you made it here you potentially have a powered clock
+/* If you made it here you potentially have a powered clock
 % must check if the gears turn or if they bind up.
 % Start with the ratcheted gear and work foward to all gears it
 % is connected to. Initial turn rate is 0, the values are updated
 % as you work through the connections. If a value to be assigned to
 % a gear conflicts with a value already there (except 0) that means
-% the system will not turn.
+% the system will not turn.*/
     
 rotation = zeros(30,1);
 period = pend(pendulum,3) * gearsize(gr);
@@ -485,15 +485,14 @@ elseif pend(pendulum,3) > 1
     score(1) = 0;
 end
 
-
-% As mentioned in the video, hands on gears are much better than gears
+/* As mentioned in the video, hands on gears are much better than gears
 % alone since they allow you to keep track of the exact position of the
 % gear. This way you can look away from the clock and not loose the
 % time. Hands therefore make the clock much better at telling time.
 % QUestion is how much better. Here I multiply the score by 1 million
 % since I think hands improve them that much (clocks that you have to
 % stare at all the time are pretty crappy), but this value is subjective.
-% Play with it and see what happens.
+% Play with it and see what happens.*/
 score(score > 1e6) = 1e6;
 output{2} = sum(score) * 1e6;
 
@@ -682,30 +681,51 @@ double Clock::circuit(double c[30][30], double primarynodes[30]) //doublecheck p
 {
 	//since c,primarynodes are arrays, they are passed by address
 	/*Matlab code.  It will be translated line by line into C code.*/
-	/*
 
-d = ones(size(c));
-dtemp = ones(length(c),1) * 1e6;
-pathmat{size(c,1),size(c,2)} = [];
-%xxx = waitbar(0,'Searching for Paths');
+	//d = ones(size(c));
+	//dtemp = ones(length(c),1) * 1e6;
+	//pathmat{size(c,1),size(c,2)} = [];
+	//%xxx = waitbar(0,'Searching for Paths');
+	double d[30][30], pathmat[30][30];
+	double dtemp[30];
+	for(int i=0;i<30;i++)
+	{
+		for(int j=0;j<30;j++)
+			d[i][j] = 1;
+		dtemp[i] = 1000000;
+	}
 
-%postmat{1:length(c)} = [];
+
+/*%postmat{1:length(c)} = [];
 for i = 1:length(c)
     postmat{i} = find(c(i,:) ~= 0);
-end
+end*/
+	/*As far as I can tell, c(i,:) is the i'th row of c.
+	  ~= 0 is not equal to zero
+	  find gives the indices of its arguements.
+	  So, we are finding the rows of c not equal to zero.*/
+	double postmat[30];
+	for(int i=0;i<30;i++)  //does this work?
+	{
+		//scan over the rows and columns of c
+		for(int j=0;j<30;j++)
+			for(int k=0;k<30;k++)
+				if(c[j][k] != 0)
+				{
+					postmat[i] = j;
+					break;
+				}
+				else
+					postmat[i] = 0;  //double check this
+	}
 
-for N = 1:length(c)
+//for N = 1:length(c)
+	for(int N = 0; N<30;N++)
+	{
     
     if isempty(primarynodes(primarynodes == N));
         continue;
     end
-    
-    %if rem(N,5) == 0
-    % waitbar(N/length(c));
-    %end
-    clear s
-    clear nn
-    clear post
     
     s = N;
     pathlength = 1;
@@ -737,7 +757,7 @@ for N = 1:length(c)
 
     d(N,:) = dtemp;
     dtemp = ones(length(c),1) * 1e6;
-    
+	} //end for(N)
 end
 
 d(d == 1e6) = NaN;
