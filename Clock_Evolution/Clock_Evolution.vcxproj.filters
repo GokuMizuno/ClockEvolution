@@ -27,12 +27,18 @@
     <ClCompile Include="Mate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stdfax.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
