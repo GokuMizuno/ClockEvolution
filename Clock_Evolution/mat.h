@@ -11,9 +11,10 @@ public:
 	double zeros(int,int);
 	double ones(int, int);
 	double rand(int, int);
-	int size_x();
-	int size_y();
+	int size_x(int);
+	int size_y(int);
 	double indices(int, int, double); //gives list of all indices that match a given number
+	double indices(double, double);
 	double slice(); //finish
 } mat;
 
