@@ -716,7 +716,7 @@ end*/
 					break;
 				}
 				else
-					postmat[i] = 0;  //double check this
+					postmat[i] = -1;  //double check this
 	}
 
 //for N = 1:length(c)

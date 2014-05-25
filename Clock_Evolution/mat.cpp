@@ -30,23 +30,28 @@ int matrix::size_y(int y)
 
 /*Needs to be tested!*/
 /*Should this be indices(int, int double*)?*/
-double matrix::indices(int row, int column, double genome)
+double matrix::indices(int row, int column, double &genome)
 {
-	int column_push = 0;
-	matrix index_list[row][column];
+	int column_push = 0, x = row, y = column;
+	matrix index_list[x][y];
 	for(int i=0;i<row;++i)
+	{
 		for(int j=0;j<column;++j)
-			if(genome[i][j] != 0)
+		{
+			if(*genome[i][j] != 0)
 			{
 				index_list[i][column_push] = j;
 				column_push++;
 			}
+		}
+		column_push = 0;
+	}
 
 	return index_list;
 }
 
 //used for matrix index = genome.indices().
-/*Yeah, this doesn't work.*/
+/*Yeah, this doesn't work.
 double matrix::indices()
 {
 	matrix index_list[][];
@@ -56,13 +61,13 @@ double matrix::indices()
 				;;
 
 	return matrix_list;
-}
+}*/
 
 /*What about using size(genome) to get dim, and making an index list that only matches a given number*/
-double matrix::indices(double number, double genome)
+double matrix::indices(double number, double &genome)
 {
 	int column_push = 0;
-	matrix index_list[genome.row()][genome.column()];
+	matrix index_list[*genome.row()][*genome.column()];
 	for(int i=0;i<row;++i)
 		for(int j=0;j<column;++j)
 			if(genome[i][j] == number)

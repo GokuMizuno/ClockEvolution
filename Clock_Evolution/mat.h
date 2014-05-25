@@ -13,8 +13,8 @@ public:
 	double rand(int, int);
 	int size_x(int);
 	int size_y(int);
-	double indices(int, int, double); //gives list of all indices that match a given number
-	double indices(double, double);
+	double indices(int, int, double&); //gives list of all indices that match a given number
+	double indices(double, double&);
 	double slice(); //finish
 } mat;
 
