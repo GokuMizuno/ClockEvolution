@@ -6,16 +6,25 @@
 
 class matrix
 {
-	int rows, columns;
+private:
+	int x, y;
+	double **mat;
 public:
+	matrix();
+	~matrix();
+	void allocmat(int, int);
+	void delmatrix();
 	double zeros(int,int);
 	double ones(int, int);
 	double rand(int, int);
-	int size_x(int);
-	int size_y(int);
+	double set_size(int, int);
+	void size_x(int);
+	void size_y(int);
 	double indices(int, int, double&); //gives list of all indices that match a given number
 	double indices(double, double&);
 	double slice(); //finish
+
+	matrix& operator= (const matrix &other);
 } mat;
 
 #endif
