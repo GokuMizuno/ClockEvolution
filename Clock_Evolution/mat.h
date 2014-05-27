@@ -14,13 +14,11 @@ public:
 	~matrix();
 	void allocmat(int, int);
 	void delmatrix();
-	double zeros(int,int);
-	double ones(int, int);
+	matrix zeros(int,int);
+	matrix ones(int, int);
 	double rand(int, int);
-	double set_size(int, int);
-	void size_x(int);
-	void size_y(int);
-	double indices(int, int, double&); //gives list of all indices that match a given number
+	matrix set_size(int, int);
+	matrix indices(int, int, matrix&); //gives list of all indices that match a given number
 	double indices(double, double&);
 	double slice(); //finish
 

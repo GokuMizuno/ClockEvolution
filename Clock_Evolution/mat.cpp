@@ -25,19 +25,20 @@ void matrix::delmatrix()
 	delete[] mat;
 }
 
-double matrix::zeros(int width, int height)
+matrix matrix::zeros(int width, int height)
 {
-	//matrix met = allocmat(width,height);
-	//double met[width][height];
+	matrix met;
+	met.allocmat(width,height);
 	for(int i=0;i<width;++i)
 		for(int j=0;j<height;++j)
 			met[i][j] = 0.;
 	return met;  //this is wrong
 }
 
-double matrix::ones(int width, int height)
+matrix matrix::ones(int width, int height)
 {
-	double met[width][height];
+	matrix met;
+	met.allocmat(width,height);
 	for(int i=0;i<width;++i)
 		for(int j=0;j<height;++j)
 			met[i][j] = 1.;
@@ -45,32 +46,25 @@ double matrix::ones(int width, int height)
 }
 
 /*Throws expression must have a constant value error*/
-double matrix::set_size(int x, int y)
+matrix matrix::set_size(int x, int y)
 {
-	matrix rectangle[x][y];
+	matrix rectangle;
+	rectangle.allocmat(x,y);
 	for(int i=0;i<x;++i)
 		for(int j=0;j<y;++j)
 			rectangle[i][j] = 0x7fffffff;
 	return rectangle;
 }
 
-/*Below is placeholder text*/
-void matrix::size_x(int x)
-{
-	this.rows = x;
-}
-
-void matrix::size_y(int y)
-{
-	this.columns = y;
-}
-
 /*Needs to be tested!*/
 /*Should this be indices(int, int double*)?*/
-double matrix::indices(int row, int column, double &target)
+matrix matrix::indices(int row, int column, matrix &target)
 {
-	int column_push = 0, x = row, y = column;
-	matrix index_list[x][y];
+	int column_push = 0;
+	matrix *ptarget;
+	ptarget = &target;
+	matrix index_list;
+	index_list.allocmat(row, column);
 	for(int i=0;i<row;++i)
 		for(int j=0;j<column;++j)
 			index_list[i][j] = 0x7fffffff;
