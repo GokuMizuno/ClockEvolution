@@ -11,6 +11,15 @@ matrix::~matrix()
 	delmatrix();
 }
 
+matrix::matrix(const matrix& other)
+{
+	x = other.x;
+	y = other.y;
+	allocmat(x,y);
+
+	std::memcpy(this,&other,sizeof(other));
+}
+
 void matrix::allocmat(int x, int y)
 {
 	mat = new double*[x];
@@ -31,7 +40,7 @@ matrix matrix::zeros(int width, int height)
 	met.allocmat(width,height);
 	for(int i=0;i<width;++i)
 		for(int j=0;j<height;++j)
-			met[i][j] = 0.;
+			met[i][j] ^= met[i][j];
 	return met;  //this is wrong
 }
 
@@ -73,7 +82,7 @@ matrix matrix::indices(int row, int column, matrix &target)
 	{
 		for(int j=0;j<column;++j)
 		{
-			if(*target[i][j] != 0)
+			if(*ptarget[i][j] != 0)
 			{
 				index_list[i][column_push] = j;
 				column_push++;

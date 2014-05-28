@@ -32,15 +32,27 @@ int main()
 	//Save every 10 generations
 	//replace while loop with a for loop; title of save file contains gen. name.
 
-/*	Clock *foo;
+	Clock *foo;
 	foo = new Clock[3];
 	for(int n=0;n<3;++n)
 	{
 		std::cout << "Clock " << n << std::endl;
 		foo[n].show();
 	}
-	delete[] foo;*/
+	//delete[] foo;
 
+	while()
+	{
+		//int i=std::rand()%sizeof(foo);  //is this right?
+		int i=std::rand()%10000;
+		if(foo[i].isLocked() == 0)
+			foo[i].Lock();
+	//mate()//pointers to the three locked clocks.
+		foo[i].Unlock();
+	}
+
+
+	delete[] foo;
 	return 0;
 }
 
