@@ -36,12 +36,12 @@ void matrix::delmatrix()
 
 matrix matrix::zeros(int width, int height)
 {
-	matrix met;
-	met.allocmat(width,height);
+	//matrix met;
+	allocmat(width,height);
 	for(int i=0;i<width;++i)
 		for(int j=0;j<height;++j)
-			met[i][j] ^= met[i][j];
-	return met;  //this is wrong
+			mat[i][j] ^= mat[i][j];
+	return *this;  //this is wrong
 }
 
 matrix matrix::ones(int width, int height)
