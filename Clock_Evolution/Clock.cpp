@@ -703,7 +703,7 @@ end*/
 	/*As far as I can tell, c(i,:) is the i'th row of c.
 	  ~= 0 is not equal to zero
 	  find gives the indices of its arguements.
-	  So, we are finding the rows of c not equal to zero.*/
+	  So, we are finding the indices of c not equal to zero.*/
 	double postmat[30];
 	for(int i=0;i<30;i++)  //does this work?
 	{
@@ -718,6 +718,33 @@ end*/
 				else
 					postmat[i] = -1;  //double check this
 	}
+	//replace above with below
+/*	{
+	int column_push = 0;
+	matrix *ptarget;
+	ptarget = &target;
+	matrix index_list;
+	index_list.allocmat(row, column);
+	for(int i=0;i<row;++i)
+		for(int j=0;j<column;++j)
+			index_list[i][j] = 0x7fffffff;
+
+	for(int i=0;i<row;++i)
+	{
+		for(int j=0;j<column;++j)
+		{
+			if(*ptarget[i][j] != 0)
+			{
+				index_list[i][column_push] = j;
+				column_push++;
+			}
+		}
+		column_push = 0;
+	}
+
+	return index_list;
+}*/
+
 
 //for N = 1:length(c)
 	for(int N = 0; N<30;N++)
