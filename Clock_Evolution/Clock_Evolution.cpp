@@ -8,8 +8,9 @@ int main()
 	//Initialize random number generator from cstdlib
 	srand(time(NULL));
 
-	int fromfile, generation;
+	int fromfile, generation, total_clocks;
 	generation = 0;
+	total_clocks = 100;  //debugging.  Allow to change
 
 	/*Clocklist holds a pointer to each clock.  Compare(*float,*float,*float) draws 3 pointers from this list
 	  Using a vector allows for linear element searching
@@ -33,7 +34,7 @@ int main()
 	//replace while loop with a for loop; title of save file contains gen. name.
 
 	Clock *foo;
-	foo = new Clock[3];
+	foo = new Clock[total_clocks];
 	for(int n=0;n<3;++n)
 	{
 		std::cout << "Clock " << n << std::endl;
@@ -44,11 +45,23 @@ int main()
 	while()
 	{
 		//int i=std::rand()%sizeof(foo);  //is this right?
-		int i=std::rand()%10000;
-		if(foo[i].isLocked() == 0)
-			foo[i].Lock();
-	//mate()//pointers to the three locked clocks.
-		foo[i].Unlock();
+		//int i=std::rand()%10000;
+		vector<int> nums;
+		Clock *plist[3]; //replace with array that holds addresses, and pass that array?
+		for(int i=0;i<3;i++)
+		{
+			nums.push_back(std::rand%total_clocks);
+			if(foo[num.at(i)].isLocked() == 0)
+			{
+				foo[i].Lock();
+				plist[i] = foo[i];
+			}
+			else
+				i--;  //repeat
+		}
+	//mate(&plist)//the list of the three locked clocks.
+		for(int i=0;i<3;++i)
+			foo[i].Unlock();
 	}
 
 
@@ -64,3 +77,5 @@ double round(double num)
 	if(num <= 0.5)  return 0.0;
 	else  return 1.0;
 }
+
+}*/
