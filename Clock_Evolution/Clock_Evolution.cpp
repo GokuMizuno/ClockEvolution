@@ -51,10 +51,10 @@ int main()
 		for(int i=0;i<3;i++)
 		{
 			nums.push_back(std::rand%total_clocks);
-			if(foo[num.at(i)].isLocked() == 0)
+			if(foo[nums.at(i)].isLocked() == 0)
 			{
 				foo[i].Lock();
-				plist[i] = foo[i];
+				plist[i] = &foo[i];
 			}
 			else
 				i--;  //repeat
@@ -77,5 +77,3 @@ double round(double num)
 	if(num <= 0.5)  return 0.0;
 	else  return 1.0;
 }
-
-}*/

@@ -13,42 +13,48 @@
 
 double round(double);
 
-void mate(Clock plist)
+void mate(Clock &plist[3]) //error:  cannot pass an array of references.
 //mate(vector<int> ptrlist)
 {
-	//std::sort(plist);  //need to sort scores.
-	Clock *sortedplist[3];
+	Clock *spl[3]; //sorted plist
 
-/*if (x < y) { if (z < x) swap(x,z); } else { if (y < z) swap(x,y); else swap(x,z); } if(z<y) swap(y,z); 
+/*if (x < y)
+  { if (z < x) swap(x,z); 
+  } 
+  else 
+  { if (y < z) swap(x,y); 
+    else swap(x,z); 
+  }
+  if(z<y) swap(y,z); 
 */
 	if(plist[0].score() < plist[1].score)
 	{
 		if(plist[2].score() < plist[0].score())
-			sortedplist[2] = plist[2];
+			spl[2] = plist[2];
 		else
-			sortedplist[2] = plist[0];
+			spl[2] = plist[0];
 	}
 	else
-		sortedplist[2] = plist[0];
+		spl[2] = plist[0];
 
 	//*plist[2] = ;//actual mating
 	
 	int i,j,k;
 	int generation;
-	generation = (sortedplist[0].Generation() >= sortedplist[1].Generation()) ? sortedplist[0].Generation() : sortedplist[1].Generation();
+	generation = (*spl[0].Generation() >= spl[1].Generation()) ? spl[0].Generation() : spl[1].Generation();
 	generation++; //gen is one higher than the highest gen parent.
 	for(int i=0;i<Clock::rows;i++)
 	{
 		for(int j=0;j<Clock::columns;j++)
 		{
 			if(round((double)(rand()/RAND_MAX)) == 0)
-				sortedplist[2].genome[i][j] = sortedplist[0].genome[i][j];
+				spl[2].genome[i][j] = spl[0].genome[i][j];
 			else
-				sortedplist[2].genome[i][j] = sortedplist[1].genome[i][j];
+				spl[2].genome[i][j] = spl[1].genome[i][j];
 		}
 	}
-	plist[2].generation = generation;
-	mutate(&plist[2]);
+	spl[2].generation = generation;
+	mutate(&spl[2]);
 }
 
 Clock mutate(Clock &ck3)
