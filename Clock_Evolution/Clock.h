@@ -21,8 +21,9 @@ public:
 	void Lock();
 	void Unlock();
 	double Score();
-	friend Clock mate(Clock&, Clock&, Clock&);
-	friend Clock mutate(Clock&);
+	friend void mate(Clock&, Clock&, Clock&);
+	friend void mate(Clock*);
+	friend void mutate(Clock&);
 	static const int rows = 40;
 	static const int columns = 41;
 private:

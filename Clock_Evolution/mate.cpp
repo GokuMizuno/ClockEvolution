@@ -13,7 +13,8 @@
 
 double round(double);
 
-void mate(Clock &plist[3]) //error:  cannot pass an array of references.
+//void mate(Clock ptr) //error:  cannot pass an array of references.
+void mate(Clock ck0, Clock ck1, Clock ck2)
 //mate(vector<int> ptrlist)
 {
 	Clock *spl[3]; //sorted plist
@@ -27,7 +28,7 @@ void mate(Clock &plist[3]) //error:  cannot pass an array of references.
   }
   if(z<y) swap(y,z); 
 */
-	if(plist[0].score() < plist[1].score)
+	if(ck0.score() < ck1.score)
 	{
 		if(plist[2].score() < plist[0].score())
 			spl[2] = plist[2];
@@ -57,7 +58,7 @@ void mate(Clock &plist[3]) //error:  cannot pass an array of references.
 	mutate(&spl[2]);
 }
 
-Clock mutate(Clock &ck3)
+void mutate(Clock &ck3)
 {
 	//I will be able to fill this once I figure out how cdk007's code
 	//does the mutating.
@@ -71,6 +72,6 @@ Clock mutate(Clock &ck3)
 		c3.genome[i][j] = 2;
 	else
 		c3.genome[i][j] = 0;
-	return ck3;  //needs to be &c3
+	//return ck3;  //needs to be &c3
+	/*If dealing with pointers, make return type void, and let pointers change ck3 dynaimcally*/
 }
-*/
