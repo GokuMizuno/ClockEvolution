@@ -64,7 +64,10 @@ int main()
 			mate(plist[0],plist[1],plist[2]);//the list of the three locked clocks.
 			for(int i=0;i<3;++i)
 				foo[i].Unlock();
+
+			current_mating++;
 		}
+		generation++;
 	}
 
 	delete[] foo;
