@@ -1,6 +1,6 @@
 /*Matrix class.
   Allows use of things that matlab does, like ones, index, et al.
-  */
+  
 #ifndef MAT_H
 #define MAT_H
 
@@ -25,4 +25,4 @@ public:
 	matrix& operator= (const matrix &other);
 } mat;
 
-#endif
+#endif*/

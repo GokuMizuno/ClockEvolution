@@ -37,6 +37,7 @@ private:
 	int arms;
 	double score;
 	//pathfinding alg.
+	//circuit(double*, double*);
 	//time accuracy.
 };
 

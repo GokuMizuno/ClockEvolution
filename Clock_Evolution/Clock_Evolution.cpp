@@ -36,13 +36,15 @@ int main()
 
 	Clock *foo;
 	foo = new Clock[total_clocks];
-	for(int n=0;n<3;++n)
+	for(int n=0;n<2;++n)
 	{
 		std::cout << "Clock " << n << std::endl;
 		foo[n].show();
 	}
-	//delete[] foo;
 
+	mutate(foo[0]);
+	foo[0].show();
+	/*
 	while(generation < total_clocks) //generation
 	{
 		while(current_mating < total_clocks) //matings per generation
@@ -68,7 +70,7 @@ int main()
 			current_mating++;
 		}
 		generation++;
-	}
+	}*/
 
 	delete[] foo;
 	return 0;

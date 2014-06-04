@@ -17,7 +17,7 @@ double round(double);
 void mate(Clock ck0, Clock ck1, Clock ck2)
 //mate(vector<int> ptrlist)
 {
-	Clock *spl[3]; //sorted plist
+//	Clock *spl[3]; //sorted plist
 
 /*if (x < y)
   { if (z < x) swap(x,z); 
@@ -27,7 +27,7 @@ void mate(Clock ck0, Clock ck1, Clock ck2)
     else swap(x,z); 
   }
   if(z<y) swap(y,z); 
-*/
+
 	if(ck0.score() < ck1.score)
 	{
 		if(plist[2].score() < plist[0].score())
@@ -56,22 +56,23 @@ void mate(Clock ck0, Clock ck1, Clock ck2)
 	}
 	spl[2].generation = generation;
 	mutate(&spl[2]);
+	*/
 }
 
 void mutate(Clock &ck3)
 {
-	//I will be able to fill this once I figure out how cdk007's code
-	//does the mutating.
-//	return &ck3;
-	int i,j;
-	i = rand() %(Clock::rows-1);
-	j = rand() %(Clock::columns-1);
-	if(round((double)(rand()/RAND_MAX)) <= 0.05)
-		c3.genome[i][j] = 1;
-	else if((round((double)(rand()/RAND_MAX)) <= 0.1)&&(round((double)(rand()/RAND_MAX)) >= 0.05))
-		c3.genome[i][j] = 2;
-	else
-		c3.genome[i][j] = 0;
-	//return ck3;  //needs to be &c3
+	for(int i = (Clock::rows-2); i>=0;i--)
+		for(int j = (Clock::columns-2);j>=0;j--)
+		{
+			double mutround = round((double)(rand()/RAND_MAX));
+				if(mutround <= 0.05)
+					ck3.genome[i][j] = 1;
+				else if((mutround <= 0.1)&&(mutround >= 0.05))
+					ck3.genome[i][j] = 2;
+				/*else
+					ck3.genome[i][j] = ck3.genome[i][j];*/
+		}
+		ck3.doPhysics();
+	//return ck3;  //needs to be &ck3
 	/*If dealing with pointers, make return type void, and let pointers change ck3 dynaimcally*/
 }

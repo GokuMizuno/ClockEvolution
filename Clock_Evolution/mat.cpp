@@ -1,4 +1,4 @@
-#include "stdfax.h"
+#include "stdfax.h"/*
 matrix::matrix()
 {
 	x=40;
@@ -54,7 +54,7 @@ matrix matrix::ones(int width, int height)
 	return met;  //this is wrong
 }
 
-/*Throws expression must have a constant value error*/
+/*Throws expression must have a constant value error*//*
 matrix matrix::set_size(int x, int y)
 {
 	matrix rectangle;
@@ -66,7 +66,7 @@ matrix matrix::set_size(int x, int y)
 }
 
 /*Needs to be tested!*/
-/*Should this be indices(int, int double*)?*/
+/*Should this be indices(int, int double*)?*//*
 matrix matrix::indices(int row, int column, matrix &target)
 {
 	int column_push = 0;
@@ -107,7 +107,7 @@ double matrix::indices()
 	return matrix_list;
 }*/
 
-/*What about using size(genome) to get dim, and making an index list that only matches a given number*/
+/*What about using size(genome) to get dim, and making an index list that only matches a given number*//*
 double matrix::indices(double number, double &genome)
 {
 	int column_push = 0;
@@ -137,4 +137,4 @@ matrix& matrix::operator= (const matrix& other)
 	}
 	return *this;
 }
-
+*/

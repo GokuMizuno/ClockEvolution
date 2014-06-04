@@ -120,7 +120,7 @@ double Clock::Score()
 		}
 		keep[i] = 0;
 	}
-	
+/*Commenting out to enable testing of mutate(Clock*)	
 	//find = provides an array of indices for nonzero elements in conn
 	//baseg = find(conn(40,1:30) ~= 0);
 	//keep(baseg) = 1;		no idea what this line does
@@ -157,7 +157,7 @@ end
 % be attached to anything else. In this simple simulation a pendulum is
 % the only form that can create regular motion, this is a simple fact.
 % If we don't find one there is no need to go on as the clock will not
-% work no matter how the remaining components are connected.*/
+% work no matter how the remaining components are connected.*//*
 p_count = 0;
 pend = [];
 for h = 31:37
@@ -224,7 +224,7 @@ output{2} = sum(score);
 % who connects where but if things don't line up in a functional way the
 % clock won't work and there is no need continuing the simulation. We
 % onlt simulate as far as we need to go. This saves computer time and
-% makes the code more compact.*/
+% makes the code more compact.*//*
 g = [];
 gr = [];
 gs = [];
@@ -277,7 +277,7 @@ output{3} = 3;
 % is connected to. Initial turn rate is 0, the values are updated
 % as you work through the connections. If a value to be assigned to
 % a gear conflicts with a value already there (except 0) that means
-% the system will not turn.*/
+% the system will not turn.*//*
     
 rotation = zeros(30,1);
 period = pend(pendulum,3) * gearsize(gr);
@@ -492,7 +492,7 @@ end
 % QUestion is how much better. Here I multiply the score by 1 million
 % since I think hands improve them that much (clocks that you have to
 % stare at all the time are pretty crappy), but this value is subjective.
-% Play with it and see what happens.*/
+% Play with it and see what happens.*//*
 score(score > 1e6) = 1e6;
 output{2} = sum(score) * 1e6;
 
@@ -535,7 +535,7 @@ void Clock::doPhysics()
 	v.reserve(5);
 	for(int j=cless;j<=0;j--) //double check to make sure this is cless or columns
 	{
-		int sum;
+		double sum;
 		sum = genome[i][cless];
 		if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
 		{
@@ -564,11 +564,11 @@ void Clock::doPhysics()
 		}
 	}
 	/*Ratchets*/
-	int i=37;
+	i=37;
 	v.reserve(5);
 	for(int j=cless;j<=0;j--)
 	{
-		int sum;
+		double sum;
 		sum = genome[i][cless];
 		if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
 		{
@@ -600,11 +600,11 @@ void Clock::doPhysics()
 
 	/*7 Hands*/
 	v.reserve(5);
-	for(int i=36;i>29;i--)
+	for(i=36;i>29;i--)
 	{
 		for(int j=cless;j<=0;j--)
 		{
-			int sum;
+			double sum;
 			sum = genome[i][cless];
 			if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
 			{
@@ -636,11 +636,11 @@ void Clock::doPhysics()
 
 	/*Gears*/
 	v.reserve(5);
-	for(int i=29;i>=0;i--)
+	for(i=29;i>=0;i--)
 	{
 		for(int j=cless;j<=0;j--)
 		{
-			int sum;
+			double sum;
 			sum = genome[i][cless];
 			if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
 			{
@@ -676,7 +676,7 @@ void Clock::doPhysics()
 			genome[j][i] = genome[i][j];
 }
 
-/*Is this going to be public or private?*/
+/*Is this going to be public or private?*//*
 double Clock::circuit(double c[30][30], double primarynodes[30]) //doublecheck primarynodes
 {
 	//since c,primarynodes are arrays, they are passed by address
@@ -686,7 +686,7 @@ double Clock::circuit(double c[30][30], double primarynodes[30]) //doublecheck p
 	//dtemp = ones(length(c),1) * 1e6;
 	//pathmat{size(c,1),size(c,2)} = [];
 	//%xxx = waitbar(0,'Searching for Paths');
-	double d[30][30], pathmat[30][30];
+/*	double d[30][30], pathmat[30][30];
 	double dtemp[30];
 	for(int i=0;i<30;i++)
 	{
@@ -703,7 +703,7 @@ end*/
 	/*As far as I can tell, c(i,:) is the i'th row of c.
 	  ~= 0 is not equal to zero
 	  find gives the indices of its arguements.
-	  So, we are finding the indices of c not equal to zero.*/
+	  So, we are finding the indices of c not equal to zero.*//*
 	double postmat[30];
 	for(int i=0;i<30;i++)  //does this work?
 	{
@@ -745,7 +745,7 @@ end*/
 	return index_list;
 }*/
 
-
+/*
 //for N = 1:length(c)
 	for(int N = 0; N<30;N++)
 	{
@@ -793,6 +793,6 @@ x{1} = d;
 x{2} = pathmat;
 */
 
-	/*end Matlab code*/
-	return somthing;
-}
+	/*end Matlab code*//*
+	return 0;//somthing;
+}*/
