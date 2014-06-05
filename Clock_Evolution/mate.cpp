@@ -61,10 +61,11 @@ void mate(Clock ck0, Clock ck1, Clock ck2)
 
 void mutate(Clock &ck3)
 {
+	double mutround;
 	for(int i = (Clock::rows-2); i>=0;i--)
 		for(int j = (Clock::columns-2);j>=0;j--)
 		{
-			double mutround = round((double)(rand()/RAND_MAX));
+			mutround = (double)rand()/(double)RAND_MAX;
 				if(mutround <= 0.05)
 					ck3.genome[i][j] = 1;
 				else if((mutround <= 0.1)&&(mutround >= 0.05))
