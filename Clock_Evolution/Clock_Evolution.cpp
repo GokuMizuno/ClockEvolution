@@ -44,14 +44,14 @@ int main()
 
 	mutate(foo[0]);
 	foo[0].show();
-	/*
+	
 	while(generation < total_clocks) //generation
 	{
 		while(current_mating < total_clocks) //matings per generation
 		{
 			vector<int> nums;
 			Clock plist[3]; //replace with array that holds addresses, and pass that array?
-			Clock *ptr = plist;
+			Clock *ptr0, *ptr1, *ptr2;
 			for(int i=0;i<3;i++)
 			{
 				nums.push_back(rand()%total_clocks);
@@ -63,14 +63,17 @@ int main()
 				else
 					i--;  //repeat
 			}
-			mate(plist[0],plist[1],plist[2]);//the list of the three locked clocks.
+			*ptr0 = plist[0];
+			*ptr1 = plist[1];
+			*ptr2 = plist[2];
+			mate(*ptr0,*ptr1,*ptr2);//the list of the three locked clocks.
 			for(int i=0;i<3;++i)
 				foo[i].Unlock();
 
 			current_mating++;
 		}
 		generation++;
-	}*/
+	}
 
 	delete[] foo;
 	return 0;

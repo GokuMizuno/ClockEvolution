@@ -14,29 +14,44 @@
 double round(double);
 
 //void mate(Clock ptr) //error:  cannot pass an array of references.
-void mate(Clock ck0, Clock ck1, Clock ck2)
-//mate(vector<int> ptrlist)
+void mate(Clock *ck0, Clock *ck1, Clock *ck2)
+//mate(vector<Clock> ptrlist)
 {
-//	Clock *spl[3]; //sorted plist
+	Clock *spl[3]; //sorted plist
 
 /*if (x < y)
-  { if (z < x) swap(x,z); 
-  } 
+  { if (z < x) swap(x,z); } 
   else 
   { if (y < z) swap(x,y); 
     else swap(x,z); 
   }
-  if(z<y) swap(y,z); 
+  if(z<y) swap(y,z); */
 
-	if(ck0.score() < ck1.score)
+	/*FINISH THIS, AND TEST IT*/
+	if((*ck0).Score() < ck1->Score())
 	{
-		if(plist[2].score() < plist[0].score())
-			spl[2] = plist[2];
-		else
-			spl[2] = plist[0];
+		if(ck2->Score() < ck0->Score())
+		{
+			spl[2] = ck2;
+			spl[1] = ck0;
+			spl[0] = ck1;
+		}
 	}
-	else
-		spl[2] = plist[0];
+	else //(x>y)
+	{
+		if(ck1->Score() < ck2->Score())
+		{ //double check everything below this line
+		spl[2] = ck0;
+			spl[1] = ck2;
+			spl[0] = ck1;
+		}
+	}
+	if(ck2->Score() < ck1->Score())
+	{
+		spl[2] = ck0;
+		spl[1] = ck2;
+		spl[0] = ck1;
+	}
 
 	//*plist[2] = ;//actual mating
 	
@@ -56,7 +71,6 @@ void mate(Clock ck0, Clock ck1, Clock ck2)
 	}
 	spl[2].generation = generation;
 	mutate(&spl[2]);
-	*/
 }
 
 void mutate(Clock &ck3)
