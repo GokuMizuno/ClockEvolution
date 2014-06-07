@@ -32,8 +32,8 @@ void mate(Clock *ck0, Clock *ck1, Clock *ck2)
 	{
 		if(ck2->Score() < ck0->Score())
 		{
-			spl[2] = ck2;
-			spl[1] = ck0;
+			*spl[2] = *ck2;  //is this right?
+			spl[1] = ck0;    //or is this?
 			spl[0] = ck1;
 		}
 	}
@@ -57,20 +57,20 @@ void mate(Clock *ck0, Clock *ck1, Clock *ck2)
 	
 	int i,j,k;
 	int generation;
-	generation = (*spl[0].Generation() >= spl[1].Generation()) ? spl[0].Generation() : spl[1].Generation();
+	generation = (spl[0]->Generation() >= spl[1]->Generation()) ? spl[0]->Generation() : spl[1]->Generation();
 	generation++; //gen is one higher than the highest gen parent.
 	for(int i=0;i<Clock::rows;i++)
 	{
 		for(int j=0;j<Clock::columns;j++)
 		{
 			if(round((double)(rand()/RAND_MAX)) == 0)
-				spl[2].genome[i][j] = spl[0].genome[i][j];
+				spl[2]->genome[i][j] = (*spl[0]).genome[i][j];
 			else
-				spl[2].genome[i][j] = spl[1].genome[i][j];
+				*spl[2].genome[i][j] = spl[1].genome[i][j];
 		}
 	}
-	spl[2].generation = generation;
-	mutate(&spl[2]);
+	spl[2]->generation = generation;
+	mutate(spl[2]);
 }
 
 void mutate(Clock &ck3)

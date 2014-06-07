@@ -90,7 +90,7 @@ double Clock::Score()
 	/*An arm is worth more than a pendula
 	  A pendula is worth more than nothing
 	  A perfectly accurate pendula is worth 1.0
-	  Bound gears make score == 0
+	  All gears bound make score == 0
 	  Each arm/pendula is worth some multiplier* how accurate it is*/
 	/*First begin with a circuit algol.
 	  Then do time accuracy*/
@@ -120,7 +120,7 @@ double Clock::Score()
 		}
 		keep[i] = 0;
 	}
-/*Commenting out to enable testing of mutate(Clock*)	
+/*Commenting out to enable testing of mutate(Clock*)*/	
 	//find = provides an array of indices for nonzero elements in conn
 	//baseg = find(conn(40,1:30) ~= 0);
 	//keep(baseg) = 1;		no idea what this line does
@@ -137,10 +137,14 @@ double Clock::Score()
 	
 	//in an nxm array, length is n>m?n:m  equal to max(size(array))
 	for g=1:length(baseg)
-		keepg = ~isnan(d2(baseg(g),:));
+		keepg = ~isnan(d2(baseg(g),:)); //what. the. hell?
 	keep(keepg==1) = 1;
 	end
 
+	for(int g=0;g<=40;++g) //c++
+	{}
+
+/*Matlab code below
 conn(40,keep==1) = 1;
 
 gconn = conn(1:30,1:30);
@@ -150,7 +154,38 @@ for r=1:30
         gconn(r,:) = 0;
         gconn(:,r) = 0;
     end
-end
+end*/
+	double conn[40][41], gconn[30][30];
+	for(int a=0;a<40;++a)
+		for(int b=0;b<30;++b)
+			conn[a][b] = 0.0;
+	for(int a=0;a<30;++a)
+		for(int b=0;b<30;++b)
+			gconn[a][b] = 0.0;
+	
+	for(int a=0;a<40;++a)
+	{
+		for(int b=0;b<30;++b)
+		{
+			if(keep[a][b] == 1)
+				conn[a][b] = 1;
+			if((a<30)&&(b<30))
+				gconn[a][b] = conn[a][b];
+		}
+	}
+
+	for(int r=0;r<30;++r)
+	{
+		if(keep[r] == 0)
+		{
+			for(int a=0;a<30;++a)
+			{
+				gconn[r][a] = 0;
+				gconn[a][r] = 0;
+			}
+		}
+	}
+
 
 /* Check for a pendulum: a hand that is attached to the base
 % that hand may be attached to a gear, but that gear cannot
@@ -176,6 +211,24 @@ for h = 31:37
         end
     end
 end
+	//c++ below
+	int p_count = 0;  //number of pendula
+	for(int h=30;h<37;++h)
+	{
+		if(conn[40][h] != 0)
+		{
+			//g=find(conn(h,1:30) != 0);  //see if the base/hand combo is attached to a gear
+			if(length(g) != 1) // no pendula
+				continue;
+		}
+
+		if(length(find(conn(g,1:40) != 0)) <= 1)
+		{
+			//stuff
+		}
+	}
+	if(p_count == 0)
+		return score;
 
 if isempty(pend)
     output{2} = 0;
