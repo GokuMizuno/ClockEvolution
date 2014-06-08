@@ -224,7 +224,11 @@ end
 
 		if(length(find(conn(g,1:40) != 0)) <= 1)
 		{
-			//stuff
+			double s = genome[h][41]/1000;
+			if(score > 0)
+			{
+				p_count++;
+				double pend[3] = {h,s,(2.007*(s^(0.5)))};
 		}
 	}
 	if(p_count == 0)
