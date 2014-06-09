@@ -213,6 +213,8 @@ for h = 31:37
 end
 	//c++ below
 	int p_count = 0;  //number of pendula
+	double s = 0;
+	double pend[3];
 	for(int h=30;h<37;++h)
 	{
 		if(conn[40][h] != 0)
@@ -224,11 +226,11 @@ end
 
 		if(length(find(conn(g,1:40) != 0)) <= 1)
 		{
-			double s = genome[h][41]/1000;
-			if(score > 0)
+			s += genome[h][41]/1000;
+			if(s > 0)
 			{
 				p_count++;
-				double pend[3] = {h,s,(2.007*(s^(0.5)))};
+				pend[3] = {h,s,(2.007*(s^(0.5)))};
 		}
 	}
 	if(p_count == 0)
