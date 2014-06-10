@@ -192,7 +192,7 @@ end*/
 % be attached to anything else. In this simple simulation a pendulum is
 % the only form that can create regular motion, this is a simple fact.
 % If we don't find one there is no need to go on as the clock will not
-% work no matter how the remaining components are connected.*//*
+% work no matter how the remaining components are connected.*/
 p_count = 0;
 pend = [];
 for h = 31:37
@@ -215,22 +215,39 @@ end
 	int p_count = 0;  //number of pendula
 	double s = 0;
 	double pend[3];
+	std::vector<double> g;
+	std::vector<double> g2;
 	for(int h=30;h<37;++h)
 	{
 		if(conn[40][h] != 0)
 		{
+			for(int a=0;a<30;++a)
+			{
+				if(conn[h][a] != 0)
+					g.push_back(conn[h][a]);
+			}
 			//g=find(conn(h,1:30) != 0);  //see if the base/hand combo is attached to a gear
-			if(length(g) != 1) // no pendula
+			if(g.size() == 0) // no pendula
 				continue;
 		}
 
-		if(length(find(conn(g,1:40) != 0)) <= 1)
+		for(int a=0;a<40;++a)
+		{
+			if(conn[g][a] != 0)  //does this work, since g is a vector?
+				g2.push_back(conn[g][a]);
+		}
+		if(g2.size() <= 1) //double check the <= 1 parameter
+		//if(length(find(conn(g,1:40) != 0)) <= 1)
 		{
 			s += genome[h][41]/1000;
 			if(s > 0)
 			{
 				p_count++;
-				pend[3] = {h,s,(2.007*(s^(0.5)))};
+				//pend[3] = {h,s,(2.007*(s^(0.5)))};
+				pend[0] = h;
+				pend[1] = s;
+				pend[2] = (2.007*(s^(0.5)));
+			}
 		}
 	}
 	if(p_count == 0)
