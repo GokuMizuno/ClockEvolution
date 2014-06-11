@@ -192,7 +192,7 @@ end*/
 % be attached to anything else. In this simple simulation a pendulum is
 % the only form that can create regular motion, this is a simple fact.
 % If we don't find one there is no need to go on as the clock will not
-% work no matter how the remaining components are connected.*/
+% work no matter how the remaining components are connected.
 p_count = 0;
 pend = [];
 for h = 31:37
@@ -210,11 +210,11 @@ for h = 31:37
             end
         end
     end
-end
+end*/
 	//c++ below
 	int p_count = 0;  //number of pendula
 	double s = 0;
-	double pend[3];
+	double pend[3]; //need to create a pend[3] for each pendula
 	std::vector<double> g;
 	std::vector<double> g2;
 	for(int h=30;h<37;++h)
@@ -252,7 +252,7 @@ end
 	}
 	if(p_count == 0)
 		return score;
-
+/*Matlab
 if isempty(pend)
     output{2} = 0;
     output{3} = 0;
@@ -261,7 +261,7 @@ end
 
 output{3} = 1;
 output{4} = pend;
-
+*/
 % Test for the pendulum(s) ability to tell various intervals of time.
 secpend = min(abs(1 - pend(:,3)))/1;
 minpend = min(abs(60 - pend(:,3)))/60;
