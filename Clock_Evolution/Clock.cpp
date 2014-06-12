@@ -214,9 +214,10 @@ end*/
 	//c++ below
 	int p_count = 0;  //number of pendula
 	double s = 0;
-	double pend[3]; //need to create a pend[3] for each pendula
+	std::vector<double> pend[3]; //need to create a pend[3] for each pendula
 	std::vector<double> g;
 	std::vector<double> g2;
+	std::vector<double> *ptr_pend;
 	for(int h=30;h<37;++h)
 	{
 		if(conn[40][h] != 0)
@@ -243,10 +244,8 @@ end*/
 			if(s > 0)
 			{
 				p_count++;
-				//pend[3] = {h,s,(2.007*(s^(0.5)))};
-				pend[0] = h;
-				pend[1] = s;
-				pend[2] = (2.007*(s^(0.5)));
+				ptr_pend.push_back() = new std::vector<double> pend[3];
+				pend[3] = {h,s,(2.007*(s^(0.5)))};
 			}
 		}
 	}
@@ -261,7 +260,7 @@ end
 
 output{3} = 1;
 output{4} = pend;
-*/
+
 % Test for the pendulum(s) ability to tell various intervals of time.
 secpend = min(abs(1 - pend(:,3)))/1;
 minpend = min(abs(60 - pend(:,3)))/60;
@@ -289,7 +288,11 @@ elseif min(pend(:,3)) > 60
     score(1:2) = 0;
 elseif min(pend(:,3)) > 1
     score(1) = 0;
-end
+end*/
+	for(auto &ptr_pend)
+	{
+		//stuff
+	}
 
 % Prevent scores of infinity.
 score(score > 1e6) = 1e6;
