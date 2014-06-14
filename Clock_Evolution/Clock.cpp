@@ -245,7 +245,10 @@ end*/
 			{
 				p_count++;
 				ptr_pend.push_back() = new std::vector<double> pend[3];
-				pend[3] = {h,s,(2.007*(s^(0.5)))};
+				//pend[3] = {h,s,(2.007*(s^(0.5)))};
+				*ptr_pend.at(0) = h;  //error:  expression must have a class type.
+				pend.at(1) = s;  //same error
+				pend.at(2) = 2.007*(s^(0.5));  //expression must have an integral type
 			}
 		}
 	}
@@ -293,6 +296,8 @@ end*/
 	{
 		//stuff
 	}
+
+	delete[] ptr_pend;
 
 % Prevent scores of infinity.
 score(score > 1e6) = 1e6;
