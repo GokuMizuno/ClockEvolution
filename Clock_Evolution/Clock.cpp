@@ -214,10 +214,14 @@ end*/
 	//c++ below
 	int p_count = 0;  //number of pendula
 	double s = 0;
-	std::vector<double> pend[3]; //need to create a pend[3] for each pendula
+	double pend[6][3];
 	std::vector<double> g;
 	std::vector<double> g2;
-	std::vector<double> *ptr_pend;
+
+	for(int h=0;h<7;++h)
+		for(int a=0;a<3;++a)
+			pend[h][a] = 0;
+
 	for(int h=30;h<37;++h)
 	{
 		if(conn[40][h] != 0)
@@ -234,26 +238,33 @@ end*/
 
 		for(int a=0;a<40;++a)
 		{
-			if(conn[g][a] != 0)  //does this work, since g is a vector?
+			if(conn[g][a] != 0)  //this does not work, need an iterator to loop over g
 				g2.push_back(conn[g][a]);
 		}
 		if(g2.size() <= 1) //double check the <= 1 parameter
 		//if(length(find(conn(g,1:40) != 0)) <= 1)
 		{
-			s += genome[h][41]/1000;
+			s = genome[h][41]/1000;
 			if(s > 0)
 			{
 				p_count++;
-				ptr_pend.push_back() = new std::vector<double> pend[3];
-				//pend[3] = {h,s,(2.007*(s^(0.5)))};
-				*ptr_pend.at(0) = h;  //error:  expression must have a class type.
-				pend.at(1) = s;  //same error
-				pend.at(2) = 2.007*(s^(0.5));  //expression must have an integral type
+				pend[h][0] = h;
+				pend[h][1] = s;
+				pend[h][2] = 2.007*(s^(0.5));
 			}
 		}
 	}
 	if(p_count == 0)
 		return score;
+
+	double min = pend[0][2];
+	for(int h=0;h<7;++h)
+	{
+		if(min < 0)
+			min *= -1;
+		if(min > pend[h][2])
+			min = pend[h][2];
+	}
 /*Matlab
 if isempty(pend)
     output{2} = 0;
@@ -262,17 +273,18 @@ if isempty(pend)
 end
 
 output{3} = 1;
-output{4} = pend;
+output{4} = pend;*/
 
-% Test for the pendulum(s) ability to tell various intervals of time.
-secpend = min(abs(1 - pend(:,3)))/1;
-minpend = min(abs(60 - pend(:,3)))/60;
-hrpend = min(abs(3600 - pend(:,3)))/3600;
-daypend = min(abs(86400 - pend(:,3)))/86400;
-weekpend = min(abs(604800 - pend(:,3)))/604800;
-yearpend = min(abs(31536000 - pend(:,3)))/31536000;
+//Test for the pendulum(s) ability to tell various intervals of time.
+	double secpend,minpend,hrpend,daypend,weekpend,yearpend;
+	secpend = (1-min)/1;
+	minpend = (60-min)/60;
+	hrpend = (3600-min)/3600;
+	daypend = (86400-min)/86400;
+	weekpend = (604800-min)/604800;
+	yearpend = (31536000-min)/31536000;
 
-score(1) = 1/secpend;
+/*score(1) = 1/secpend;
 score(2) = 1/minpend;
 score(3) = 1/hrpend;
 score(4) = 1/daypend;
@@ -292,12 +304,6 @@ elseif min(pend(:,3)) > 60
 elseif min(pend(:,3)) > 1
     score(1) = 0;
 end*/
-	for(auto &ptr_pend)
-	{
-		//stuff
-	}
-
-	delete[] ptr_pend;
 
 % Prevent scores of infinity.
 score(score > 1e6) = 1e6;
