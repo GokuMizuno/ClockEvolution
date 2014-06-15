@@ -284,31 +284,21 @@ output{4} = pend;*/
 	weekpend = (604800-min)/604800;
 	yearpend = (31536000-min)/31536000;
 
-/*score(1) = 1/secpend;
-score(2) = 1/minpend;
-score(3) = 1/hrpend;
-score(4) = 1/daypend;
-score(5) = 1/weekpend;
-score(6) = 1/yearpend;
+	if(min > 31536000)
+		score += 0;
+	else if(min > 604800)
+		score += 1/yearpend;
+	else if(min > 86400)
+		score += 1/weekpend + 1/yearpend;
+	else if(min > 3600)
+		score += 1/daypend + 1/weekpend + 1/yearpend;
+	else if(min > 60)
+		score += 1/hrpend + 1/daypend + 1/weekpend + 1/yearpend;
+	else if(min > 1)
+		score += 1/minpend + 1/hrpend + 1/daypend + 1/weekpend + 1/yearpend;
+	else //min more accurate than a second
+		score += 1/secpend + 1/minpend + 1/hrpend + 1/daypend + 1/weekpend + 1/yearpend;
 
-if min(pend(:,3)) > 31536000
-    score(1:6) = 0;
-elseif min(pend(:,3)) > 604800
-    score(1:5) = 0;
-elseif min(pend(:,3)) > 86400
-    score(1:4) = 0;
-elseif min(pend(:,3)) > 3600
-    score(1:3) = 0;
-elseif min(pend(:,3)) > 60
-    score(1:2) = 0;
-elseif min(pend(:,3)) > 1
-    score(1) = 0;
-end*/
-
-% Prevent scores of infinity.
-score(score > 1e6) = 1e6;
-output{2} = sum(score);
-  
 /* Let's search foward from the pendulum. The only way a pendulum can
 % transfer motion to gears is through a ratchet. We are not constraining
 % who connects where but if things don't line up in a functional way the
