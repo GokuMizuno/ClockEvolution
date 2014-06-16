@@ -87,9 +87,7 @@ double Clock::Score()
 	int gears, pendula, arms;  //number of each
 
 	score = 0;
-	/*An arm is worth more than a pendula
-	  A pendula is worth more than nothing
-	  A perfectly accurate pendula is worth 1.0
+	/*An arm > pendula > nothing
 	  All gears bound make score == 0
 	  Each arm/pendula is worth some multiplier* how accurate it is*/
 	/*First begin with a circuit algol.
@@ -99,10 +97,6 @@ double Clock::Score()
 	  the matlab code will be commented out.*/
 	
 	//no idea what temp99 is, or what it does.  Keep commented out
-	/*
-	temp99 = ck;
-	temp99(1:40,1:40) = conn;
-	output{1} = temp99;*/
 	
 	//gconn2 = zeros(30);
 	//gconn2(conn(1:30,1:30)==2) = 2;
@@ -265,15 +259,6 @@ end*/
 		if(min > pend[h][2])
 			min = pend[h][2];
 	}
-/*Matlab
-if isempty(pend)
-    output{2} = 0;
-    output{3} = 0;
-    return
-end
-
-output{3} = 1;
-output{4} = pend;*/
 
 //Test for the pendulum(s) ability to tell various intervals of time.
 	double secpend,minpend,hrpend,daypend,weekpend,yearpend;
@@ -296,7 +281,7 @@ output{4} = pend;*/
 		score += 1/hrpend + 1/daypend + 1/weekpend + 1/yearpend;
 	else if(min > 1)
 		score += 1/minpend + 1/hrpend + 1/daypend + 1/weekpend + 1/yearpend;
-	else //min more accurate than a second
+	else //min has sub-second accuracy
 		score += 1/secpend + 1/minpend + 1/hrpend + 1/daypend + 1/weekpend + 1/yearpend;
 
 /* Let's search foward from the pendulum. The only way a pendulum can
