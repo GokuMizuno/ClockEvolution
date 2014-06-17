@@ -62,6 +62,7 @@
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Clock_Evolution.cpp" />
+    <ClCompile Include="graph.cpp" />
     <ClCompile Include="mat.cpp" />
     <ClCompile Include="Mate.cpp" />
     <ClCompile Include="SaveLoad.cpp" />

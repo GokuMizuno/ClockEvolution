@@ -96,8 +96,6 @@ double Clock::Score()
 	/*This is the Matlab code.  Each line will be translated into C, and as it is done,
 	  the matlab code will be commented out.*/
 	
-	//no idea what temp99 is, or what it does.  Keep commented out
-	
 	//gconn2 = zeros(30);
 	//gconn2(conn(1:30,1:30)==2) = 2;
 	//keep = 30x1 matrix of zeroes
