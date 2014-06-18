@@ -34,7 +34,7 @@ public:
 		for(auto& vertex : vertices)
 		{
 			if(vertex.first == start)
-				distances[vertex.first = 0;
+				distances[vertex.first] = 0;
 			else
 				distances[vertex.first] = std::numeric_limits<int>::max();
 

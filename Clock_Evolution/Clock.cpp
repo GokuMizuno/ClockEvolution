@@ -758,6 +758,10 @@ double Clock::circuit(double c[30][30], double primarynodes[30]) //doublecheck p
 		dtemp[i] = 1000000;
 	}
 
+	/*Actually find the bloody algol.
+	for(int i=0;i<pathmat.length;++i)
+		for(int j=0;j<pathmat.length;++j)
+			graph.add(pathmat[i][j]);*/
 
 /*%postmat{1:length(c)} = [];
 for i = 1:length(c)
