@@ -739,7 +739,7 @@ void Clock::doPhysics()
 			genome[j][i] = genome[i][j];
 }
 
-/*Is this going to be public or private?*//*
+/*Private function, only called by Score()*//*
 double Clock::circuit(double c[30][30], double primarynodes[30]) //doublecheck primarynodes
 {
 	//since c,primarynodes are arrays, they are passed by address
