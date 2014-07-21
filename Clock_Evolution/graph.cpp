@@ -4,6 +4,9 @@
 // Origin of blog post http://pompidev.net/2012/05/29/a-practical-overview-of-awith-code/
 */
 
+#include "stdfax.h"
+#include <cmath>
+
 struct AScore {
 	public:
 		AScore()
