@@ -89,17 +89,10 @@ double Clock::Score()
 	score = 0;
 	/*An arm > pendula > nothing
 	  All gears bound make score == 0
-	  Each arm/pendula is worth some multiplier* how accurate it is*/
+	  Each arm/pendula is worth some multiplier times how accurate it is*/
 	/*First begin with a circuit algol.
 	  Then do time accuracy*/
 
-	/*This is the Matlab code.  Each line will be translated into C, and as it is done,
-	  the matlab code will be commented out.*/
-	
-	//gconn2 = zeros(30);
-	//gconn2(conn(1:30,1:30)==2) = 2;
-	//keep = 30x1 matrix of zeroes
-	//keep = zeros(30,1);
 	double gconn2[30][30], keep[30];
 	for(int i=0;i<30;i++)
 	{
@@ -112,10 +105,7 @@ double Clock::Score()
 		}
 		keep[i] = 0;
 	}
-/*Commenting out to enable testing of mutate(Clock*)*/	
-	//find = provides an array of indices for nonzero elements in conn
-	//baseg = find(conn(40,1:30) ~= 0);
-	//keep(baseg) = 1;		no idea what this line does
+
 	for(int i=0;i<rows;i++)
 		for(int j=0;j<30;j++)
 			if((2 == genome[i][j])||(1 == genome[i][j]))
@@ -124,8 +114,11 @@ double Clock::Score()
 	
 	//The circuit_distance.m function finds the shortest path between every
 	// pair of gears.
-	d2 = circuit(gconn2,baseg);
-	//d2 = d2{1};		no idea what this line does
+	/*for(int i=;;)
+	{
+		for(int j=;;)
+			something[i][j] = circuit(gconn2,baseg);
+	}*/
 	
 	//in an nxm array, length is n>m?n:m  equal to max(size(array))
 	for g=1:length(baseg)
@@ -136,17 +129,6 @@ double Clock::Score()
 	for(int g=0;g<=40;++g) //c++
 	{}
 
-/*Matlab code below
-conn(40,keep==1) = 1;
-
-gconn = conn(1:30,1:30);
-
-for r=1:30
-    if keep(r) == 0
-        gconn(r,:) = 0;
-        gconn(:,r) = 0;
-    end
-end*/
 	double conn[40][41], gconn[30][30];
 	for(int a=0;a<40;++a)
 		for(int b=0;b<30;++b)
@@ -185,25 +167,7 @@ end*/
 % the only form that can create regular motion, this is a simple fact.
 % If we don't find one there is no need to go on as the clock will not
 % work no matter how the remaining components are connected.
-p_count = 0;
-pend = [];
-for h = 31:37
-    if conn(40,h) ~= 0
-        g = find(conn(h,1:30) ~= 0);
-        if length(g) ~= 1
-            continue;
-        end
-
-        if length(find(conn(g,1:40) ~= 0)) <= 1
-            l = (ck(h,41)/1e4);
-            if l > 0
-                p_count = p_count + 1;
-                pend(p_count,1:3) = [h l (2.007 * (l^0.5))];
-            end
-        end
-    end
-end*/
-	//c++ below
+*/
 	int p_count = 0;  //number of pendula
 	double s = 0;
 	double pend[6][3];
@@ -287,281 +251,7 @@ end*/
 % who connects where but if things don't line up in a functional way the
 % clock won't work and there is no need continuing the simulation. We
 % onlt simulate as far as we need to go. This saves computer time and
-% makes the code more compact.*//*
-g = [];
-gr = [];
-gs = [];
-for p = 1:size(pend,1)
-    if conn(38,pend(p,1)) == 1
-        %The ratchet connects to the pendulum.
-        %This is the gear the pendulum ratchet connects to
-        gr = find(conn(38,1:30) == 2);
-        if length(gr) > 1
-            gr = gr(1);
-        end
-        
-        if conn(40,gr) == 0
-            %The gear does not connect to the base.
-            gr = [];
-        end
-        
-        if ~isempty(gr)
-            %This is the gear the spring connects to
-            gs = find(conn(39,1:30) ~= 0);
-            if length(gs) > 1
-                gs = gs(1);
-            end
-            
-            if conn(40,gs) == 0
-                gs = [];
-            end
-            pendulum = p;
-        end
-    end
-end
-        
-if ~isempty(gr) && ~isempty(gs)
-    d2 = circuit_distance(gconn,[gr gs]);
-    d2 = d2{1};
-    
-    if ~isnan(d2(gr,gs)) || gs == gr
-        %The spring gear connects to the ratchet gear
-    else
-        output{3} = 2;
-        return
-    end
-else
-    return
-end
-output{3} = 3;
-/* If you made it here you potentially have a powered clock
-% must check if the gears turn or if they bind up.
-% Start with the ratcheted gear and work foward to all gears it
-% is connected to. Initial turn rate is 0, the values are updated
-% as you work through the connections. If a value to be assigned to
-% a gear conflicts with a value already there (except 0) that means
-% the system will not turn.*//*
-    
-rotation = zeros(30,1);
-period = pend(pendulum,3) * gearsize(gr);
-period = (round(period * 1e3)) / 1e3;
-rotation(gr) = period;
-pathlength = 1;
-s = gr;
-        
-while pathlength > 0
-    nn = s(pathlength);
-    post = find(gconn(nn,:) ~= 0);
-    
-    badgears = 0;
-    foundtip = 0;
-    for test = 1:length(post)
-        if gconn(nn,post(test)) == 2
-            temprot = rotation(nn);
-        else
-            temprot = -rotation(nn) * (gearsize(post(test))/gearsize(nn));
-        end
-        
-        temprot = (round(temprot * 1e3)) / 1e3;
-        
-        if rotation(post(test)) == 0
-            rotation(post(test)) = temprot;
-            s = [s post(test)];
-            pathlength = pathlength + 1;
-            foundtip = 1;
-            break;
-        elseif abs(rotation(post(test)) - temprot) > 0.002
-            badgears = 1;
-            break
-            
-        end
-    end
-    
-    if badgears == 1
-        %disp('gears');
-        break;
-        
-    end
-        
-    if isempty(test) && foundtip == 0
-        s = s(1:length(s)-1);
-        pathlength = pathlength - 1;
-    elseif test == length(post) && foundtip == 0
-        s = s(1:length(s)-1);
-        pathlength = pathlength - 1;
-    end
-end
-
-% There are other ways gears can bind. First check if a hand
-% connects to two different gears. At least one must be spinning.
-
-for r=31:37
-    o = find(conn(r,1:40) ~= 0);
-    if length(o) > 1
-        g = find(conn(r,1:30) ~= 0);
-        for temp = 1:length(g)
-            if rotation(g(temp)) ~= 0
-                badgears = 1;
-                %disp('hands');
-            end
-        end
-    end
-end
-
-% The spring was previously determined to connect to one gear and
-% the housing, therefore the spring cannot bind up the gears.
-% The ratchet was also previously tested.
-
-if badgears == 1
-    return
-end
-
-output{3} = 4;
-% If you make it here then the gears do not bind. Find the hands
-% are attached to the gears that move and calculate their period
-% moving hands beat out pendulums. Multiply their scores by 1000.
-
-spinrate = rotation(rotation ~= 0);
-
-% Here we test the gears ability to measure various intervals of time.
-% Gears usually beat pendulums since they can spin at much slower rates.
-secgear = min(abs(1-abs(spinrate)))/1;
-mingear = min(abs(60-abs(spinrate)))/60;
-hrgear = min(abs(3600-abs(spinrate)))/3600;
-daygear = min(abs(86400-abs(spinrate)))/86400;
-weekgear = min(abs(604800-abs(spinrate)))/604800;
-yeargear = min(abs(31536000-abs(spinrate)))/31536000;
-
-if score(1) < abs(1/secgear)
-    score(1) = abs(1/secgear);
-end
-if score(2) < abs(1/mingear)
-    score(2) = abs(1/mingear);
-end
-if score(3) < abs(1/hrgear)
-    score(3) = abs(1/hrgear);
-end
-if score(4) < abs(1/daygear)
-    score(4) = abs(1/daygear);
-end
-if score(5) < abs(1/weekgear)
-    score(5) = abs(1/weekgear);
-end
-if score(6) < abs(1/yeargear)
-    score(6) = abs(1/yeargear);
-end
-
-% Gears cannot keep time below the period of the pendulum. This feature
-% might have been added after I made the video.
-if pend(pendulum,3) > 31536000
-    score(1:6) = 0;
-elseif pend(pendulum,3) > 604800
-    score(1:5) = 0;
-elseif pend(pendulum,3) > 86400
-    score(1:4) = 0;
-elseif pend(pendulum,3) > 3600
-    score(1:3) = 0;
-elseif pend(pendulum,3) > 60
-    score(1:2) = 0;
-elseif pend(pendulum,3) > 1
-    score(1) = 0;
-end
-    
-score(score > 1e6) = 1e6;
-output{2} = sum(score);
-
-spinners = find(rotation ~= 0);
-hands = [];
-handcount = 0;
-
-% Look for hands connected to the gears.
-for h=31:37
-    temphand = find(conn(h,spinners) ~= 0);
-    if ~isempty(temphand)
-        if conn(40,h) == 0
-            handcount = handcount + 1;
-            hands(handcount,1:3) = [h spinners(temphand) rotation(spinners(temphand))];
-    
-        end
-    end
-end
-
-if isempty(hands)
-    return
-end
-output{3} = 5;
-output{5} = hands;
-
-% Test the hands ability to measure various periods of time.
-hs = abs(1 - abs(hands(:,3)))/1;
-hm = abs(60 - abs(hands(:,3)))/60;
-hh = abs(3600 - abs(hands(:,3)))/3600;
-hd = abs(86400 - abs(hands(:,3)))/86400;
-hw = abs(604800 - abs(hands(:,3)))/604800;
-hy = abs(31536000 - abs(hands(:,3)))/31536000;
-
-sechand = min(hs);
-minhand = min(hm);
-hrhand = min(hh);
-dayhand = min(hd);
-weekhand = min(hw);
-yearhand = min(hy);
-
-temp = find(hs == sechand);
-handuse(1) = temp(1);
-
-temp = find(hm == minhand);
-handuse(2) = temp(1);
-
-temp = find(hh == hrhand);
-handuse(3) = temp(1);
-
-temp = find(hd == dayhand);
-handuse(4) = temp(1);
-
-temp = find(hw == weekhand);
-handuse(5) = temp(1);
-
-temp = find(hy == yearhand);
-handuse(6) = temp(1);
-
-uniquehand = length(unique(handuse));
-
-score(1) = abs(1/sechand);
-score(2) = abs(1/minhand);
-score(3) = abs(1/hrhand);
-score(4) = abs(1/dayhand);
-score(5) = abs(1/weekhand);
-score(6) = abs(1/yearhand);
-
-if pend(pendulum,3) > 31536000
-    score(1:6) = 0;
-elseif pend(pendulum,3) > 604800
-    score(1:5) = 0;
-elseif pend(pendulum,3) > 86400
-    score(1:4) = 0;
-elseif pend(pendulum,3) > 3600
-    score(1:3) = 0;
-elseif pend(pendulum,3) > 60
-    score(1:2) = 0;
-elseif pend(pendulum,3) > 1
-    score(1) = 0;
-end
-
-/* As mentioned in the video, hands on gears are much better than gears
-% alone since they allow you to keep track of the exact position of the
-% gear. This way you can look away from the clock and not loose the
-% time. Hands therefore make the clock much better at telling time.
-% QUestion is how much better. Here I multiply the score by 1 million
-% since I think hands improve them that much (clocks that you have to
-% stare at all the time are pretty crappy), but this value is subjective.
-% Play with it and see what happens.*//*
-score(score > 1e6) = 1e6;
-output{2} = sum(score) * 1e6;
-
-output{3} = 4 + uniquehand;
-*/
-	/*This is the end of the Matlab code.*/
+% makes the code more compact.*/
 	return score;
 }
 
@@ -743,13 +433,8 @@ void Clock::doPhysics()
 double Clock::circuit(double c[30][30], double primarynodes[30]) //doublecheck primarynodes
 {
 	//since c,primarynodes are arrays, they are passed by address
-	/*Matlab code.  It will be translated line by line into C code.*/
 
-	//d = ones(size(c));
-	//dtemp = ones(length(c),1) * 1e6;
-	//pathmat{size(c,1),size(c,2)} = [];
-	//%xxx = waitbar(0,'Searching for Paths');
-/*	double d[30][30], pathmat[30][30];
+	/*	double d[30][30], pathmat[30][30];
 	double dtemp[30];
 	for(int i=0;i<30;i++)
 	{
@@ -812,54 +497,5 @@ end*/
 	return index_list;
 }*/
 
-/*
-//for N = 1:length(c)
-	for(int N = 0; N<30;N++)
-	{
-    
-    if isempty(primarynodes(primarynodes == N));
-        continue;
-    end
-    
-    s = N;
-    pathlength = 1;
-    
-    while pathlength > 0
-        nn = s(pathlength);
-        post = postmat{nn};
-        
-        foundtip = 0;
-        for test = 1:length(post)
-            if dtemp(post(test)) > pathlength
-                dtemp(post(test)) = pathlength;
-                pathmat{N,post(test)} = [s post(test)];
-                s = [s post(test)];
-                pathlength = pathlength + 1;
-                foundtip = 1;
-                break;
-            end
-        end
-        
-        if isempty(test) && foundtip == 0
-            s = s(1:length(s)-1);
-            pathlength = pathlength - 1;
-        elseif test == length(post) && foundtip == 0
-            s = s(1:length(s)-1);
-            pathlength = pathlength - 1;
-        end
-    end
-
-    d(N,:) = dtemp;
-    dtemp = ones(length(c),1) * 1e6;
-	} //end for(N)
-end
-
-d(d == 1e6) = NaN;
-
-x{1} = d;
-x{2} = pathmat;
-*/
-
-	/*end Matlab code*//*
 	return 0;//somthing;
 }*/
