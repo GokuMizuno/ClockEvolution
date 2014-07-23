@@ -496,6 +496,10 @@ end*/
 
 	return index_list;
 }*/
-
+	Initialize(40,41,1);  //Width, height, Factor
+	//iterate over the nonzero, noninfinity elements of genome and try and connect them
+	for(int i=0;i<40;++i)
+		for(int j=0;j<41;++j)
+			Start(genome[i][j];);  
 	return 0;//somthing;
 }*/
