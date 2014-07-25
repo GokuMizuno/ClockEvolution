@@ -429,24 +429,18 @@ void Clock::doPhysics()
 			genome[j][i] = genome[i][j];
 }
 
-/*Private function, only called by Score()*//*
-double Clock::circuit(double c[30][30], double primarynodes[30]) //doublecheck primarynodes
+/*Private function, only called by Score()*/
+double Clock::circuit(double c[30][30]) //doublecheck primarynodes
 {
-	//since c,primarynodes are arrays, they are passed by address
+	//genome[][], aka c[][] is passed by address
+	/*for A*, we need a list of all the elements of c[][] that are nonzero.
+	We pass that list to A*, and iterate over it, looking for a path between
+	two nodes.
+	We then return that matrix, and let Score do it's thing to the returned matrix.
 
-	/*	double d[30][30], pathmat[30][30];
-	double dtemp[30];
-	for(int i=0;i<30;i++)
-	{
-		for(int j=0;j<30;j++)
-			d[i][j] = 1;
-		dtemp[i] = 1000000;
-	}
-
-	/*Actually find the bloody algol.
-	for(int i=0;i<pathmat.length;++i)
-		for(int j=0;j<pathmat.length;++j)
-			graph.add(pathmat[i][j]);*/
+	Either that, or rearrange circuit, and pass to it the wanted nodes, and see if
+	a path exists between them.  If that is the case, circuit() may not be needed,
+	A* can just be directly invoked from Score.
 
 /*%postmat{1:length(c)} = [];
 for i = 1:length(c)
@@ -496,10 +490,10 @@ end*/
 
 	return index_list;
 }*/
-	Initialize(40,41,1);  //Width, height, Factor
+	Initialize(row,column,1);  //Width, height, Factor
 	//iterate over the nonzero, noninfinity elements of genome and try and connect them
 	for(int i=0;i<40;++i)
 		for(int j=0;j<41;++j)
 			Start(genome[i][j];);  
 	return 0;//somthing;
-}*/
+}

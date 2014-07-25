@@ -11,7 +11,6 @@
 
 //change all of this to deal with pointers
 
-double round(double);
 
 //void mate(Clock ptr) //error:  cannot pass an array of references.
 void mate(Clock *ck0, Clock *ck1, Clock *ck2)

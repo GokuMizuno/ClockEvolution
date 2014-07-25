@@ -5,7 +5,6 @@
 */
 
 #include "stdfax.h"
-#include <cmath>
 
 struct AScore {
 	public:

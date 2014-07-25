@@ -1,8 +1,6 @@
 #include "stdfax.h"
 using std::vector;
 
-double round(double);
-
 int main()
 {
 	//Initialize random number generator from cstdlib
@@ -79,11 +77,3 @@ int main()
 	return 0;
 }
 
-double round(double num)
-{
-	/*Theoretically, num will be between [0,1], but we all know how well
-	  theory and reality mesh...
-	  (double)(rand()/RAND_MAX) will always return a value betwen [0,1]*/
-	if(num <= 0.5)  return 0.0;
-	else  return 1.0;
-}
