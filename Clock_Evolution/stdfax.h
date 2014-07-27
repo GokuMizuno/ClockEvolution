@@ -5,7 +5,8 @@
 #include <vector>
 #include <cmath>  //for round(double)
 #include <list>  //for std::list
-#include <concurrent_priority_queue.h>  //for std::priority_queue
+//#include <concurrent_priority_queue.h>  //for std::priority_queue
+#include <queue> //for std::priority_queue
 #include "clock.h"
 //#include "mat.h"
 

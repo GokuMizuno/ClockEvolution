@@ -490,7 +490,7 @@ end*/
 
 	return index_list;
 }*/
-	Initialize(row,column,1);  //Width, height, Factor
+	AStar.Heuteristic.Initialize(row,column,1);  //Width, height, Factor
 	//iterate over the nonzero, noninfinity elements of genome and try and connect them
 	for(int i=0;i<40;++i)
 		for(int j=0;j<41;++j)
