@@ -206,7 +206,7 @@ double Clock::Score()
 				p_count++;
 				pend[h][0] = h;
 				pend[h][1] = s;
-				pend[h][2] = 2.007*(s^(0.5));
+				pend[h][2] = 2.007*(s^(1/2));
 			}
 		}
 	}
@@ -492,8 +492,14 @@ end*/
 }*/
 	AStar.Heuteristic.Initialize(row,column,1);  //Width, height, Factor
 	//iterate over the nonzero, noninfinity elements of genome and try and connect them
-	for(int i=0;i<40;++i)
-		for(int j=0;j<41;++j)
-			Start(genome[i][j];);  
+	for (int i = 0; i < 40; ++i)
+	{
+		for (int j = 0; j < 41; ++j)
+		{
+			AStar.Heuteristic.Start(genome[i][j]; genome[m][n]);
+			AStar.Heateristic.Calculate(genome[i][j], genome[m][n], 1);
+		}
+	}
+
 	return 0;//somthing;
 }

@@ -8,6 +8,7 @@
 //#include <concurrent_priority_queue.h>  //for std::priority_queue
 #include <queue> //for std::priority_queue
 #include "clock.h"
+#include "graph.h"
 //#include "mat.h"
 
 #ifndef Pi
