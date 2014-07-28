@@ -490,14 +490,15 @@ end*/
 
 	return index_list;
 }*/
-	AStar.Heuteristic.Initialize(row,column,1);  //Width, height, Factor
+	AStar.Initialize(row,column,1);  //Width, height, Factor
 	//iterate over the nonzero, noninfinity elements of genome and try and connect them
 	for (int i = 0; i < 40; ++i)
 	{
 		for (int j = 0; j < 41; ++j)
 		{
-			AStar.Heuteristic.Start(genome[i][j]; genome[m][n]);
-			AStar.Heateristic.Calculate(genome[i][j], genome[m][n], 1);
+			//need to change genome to ACell format.
+			AStar.Heuristic.Start(genome[i][j]; genome[m][n]);
+			AStar.Heuristic.Calculate(genome[i][j], genome[m][n], 1);
 		}
 	}
 

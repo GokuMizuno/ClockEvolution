@@ -1,6 +1,6 @@
 #ifndef graph.h
 #define graph.h
-#include "stdafx.h"
+#include "stdfax.h"
 
 /*This file contains all the struct and class decs for graph.cpp*/
 struct AScore
@@ -14,7 +14,7 @@ struct ACell
 {
 	ACell();
 	unsigned x, y;
-	bool operator < const;
+	bool operator <(const ACell&) const;
 	bool enable;
 };
 
