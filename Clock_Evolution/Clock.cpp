@@ -12,8 +12,8 @@ Clock::Clock() //default constructor
 
 	Structure of the clock matrix
 				row			column
-	30 gears:	0:29		0:39	for connectivity
-							40		number of teeth
+	30 gears	0:29		0:39	for connectivity
+				0:29		40		number of teeth
 	7 hands		30:36		0:39	connectivity
 	1 ratchet	37			0:39	connectivity
 	1 spring	38			0:39	connectivity
@@ -39,7 +39,7 @@ Clock::Clock() //default constructor
 					genome[j][k] = 4;
 				for(int l=0;l<columns;l++)
 				{
-					double sum=0;
+					int sum=0;
 					sum += genome[j][l];
 					if(genome[j][cless] < sum)
 						genome[j][cless] = sum;
@@ -47,13 +47,12 @@ Clock::Clock() //default constructor
 			}
 			else
 			{
-				genome[j][k] = mrand();
-				if(genome[j][k] > 0.997)
-					genome[j][k] = 2.0;
-				else if(genome[j][k] > 0.954)
-					genome[j][k] = 1.0;
+				if(mrand() > 0.997)
+					genome[j][k] = 2;
+				else if((mrand() > 0.954)&&(mrand() < 0.997))
+					genome[j][k] = 1;
 				else
-					genome[j][k] = 0.0;
+					genome[j][k] = 0;
 			}
 		}
 	}
@@ -77,6 +76,7 @@ void Clock::show(void)
 }
 
 int Clock::Generation()  {  return generation;  }
+void Clock::Generation(int newGen)  { generation = newGen; }
 bool Clock::isLocked()  {  return flag;  }
 void Clock::Lock()  {  flag = 1;  }
 void Clock::Unlock()  {  flag = 0;  }
@@ -92,25 +92,6 @@ double Clock::Score()
 	  Each arm/pendula is worth some multiplier times how accurate it is*/
 	/*First begin with a circuit algol.
 	  Then do time accuracy*/
-
-	double gconn2[30][30], keep[30];
-	for(int i=0;i<30;i++)
-	{
-		for(int j=0;j<30;j++)
-		{
-			if(2 == genome[i][j])
-				gconn2[i][j] = 2;
-			else
-				gconn2[i][j] = 0;
-		}
-		keep[i] = 0;
-	}
-
-	for(int i=0;i<rows;i++)
-		for(int j=0;j<30;j++)
-			if((2 == genome[i][j])||(1 == genome[i][j]))
-				baseg[i][j] = i;
-	//double check to make sure i is the proper index to be saving
 	
 	//The circuit_distance.m function finds the shortest path between every
 	// pair of gears.
@@ -281,16 +262,14 @@ void Clock::doPhysics()
 	  we use bidirectional connectivity to make sure that since A touches B, B touches A*/
 	int cless = columns-2;  //last column is used for #teeth/ger
 	int rless = rows-1;
-	std::vector<double> v;
+	std::vector<int> v;
 
 	/*Spring*/
 	int i=38;
 	v.reserve(5);
 	for(int j=cless;j<=0;j--) //double check to make sure this is cless or columns
 	{
-		double sum;
-		sum = genome[i][cless];
-		if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
+		if((1 == genome[i][j])&&(2 == genome[i][j]))
 		{
 			v.push_back(j);
 		}
@@ -302,11 +281,10 @@ void Clock::doPhysics()
 			v.at(rand()%v.size()) = -1;
 			qq--;
 		}
-
 		//the last thing we do is clear the vector
-		for(std::vector<double>::iterator it=v.end();it!=v.begin();it--)
+		for(std::vector<int>::iterator it=v.end();it!=v.begin();it--)
 		{
-			if(*it != -1)
+			if(*it == -1)
 			{
 				/*For some reason, VS2010 throws an error at genome[i][*it]*/
 				int q = *it;
@@ -316,14 +294,13 @@ void Clock::doPhysics()
 			v.pop_back();
 		}
 	}
+
 	/*Ratchets*/
 	i=37;
 	v.reserve(5);
 	for(int j=cless;j<=0;j--)
 	{
-		double sum;
-		sum = genome[i][cless];
-		if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
+		if((1 == genome[i][j])&&(2 == genome[i][j]))
 		{
 			v.push_back(j);
 		}
@@ -338,9 +315,9 @@ void Clock::doPhysics()
 		}
 
 		//the last thing we do is clear the vector
-		for(std::vector<double>::iterator it=v.end();it!=v.begin();it--)
+		for(std::vector<int>::iterator it=v.end();it!=v.begin();it--)
 		{
-			if(*it != -1)
+			if(*it == -1)
 			{
 				/*For some reason, VS2010 throws an error at genome[i][*it]*/
 				int q = *it;
@@ -357,9 +334,7 @@ void Clock::doPhysics()
 	{
 		for(int j=cless;j<=0;j--)
 		{
-			double sum;
-			sum = genome[i][cless];
-			if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
+			if((1 == genome[i][j])&&(2 == genome[i][j]))
 			{
 				v.push_back(j);
 			}
@@ -373,9 +348,9 @@ void Clock::doPhysics()
 			}
 
 		//the last thing we do is clear the vector
-			for(std::vector<double>::iterator it=v.end();it!=v.begin();it--)
+			for(std::vector<int>::iterator it=v.end();it!=v.begin();it--)
 			{
-				if(*it != -1)
+				if(*it == -1)
 				{
 				/*For some reason, VS2010 throws an error at genome[i][*it]*/
 					int q = *it;
@@ -393,8 +368,6 @@ void Clock::doPhysics()
 	{
 		for(int j=cless;j<=0;j--)
 		{
-			double sum;
-			sum = genome[i][cless];
 			if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
 			{
 				v.push_back(j);
@@ -409,7 +382,7 @@ void Clock::doPhysics()
 			}
 
 		//the last thing we do is clear the vector
-			for(std::vector<double>::iterator it=v.end();it!=v.begin();it--)
+			for(std::vector<int>::iterator it=v.end();it!=v.begin();it--)
 			{
 				if(*it != -1)
 				{
@@ -425,12 +398,16 @@ void Clock::doPhysics()
 	/*Bidirectionality
 	  Start from bottom due to having already fixed the lower part of the matrix*/
 	for(int i =rless;i>0;i--)
-		for(int j = cless;j>0;j--)
+		for (int j = cless; j > 0; j--)
+		{
 			genome[j][i] = genome[i][j];
+			if (i == j)
+				genome[i][j] = 0;
+		}
 }
 
 /*Private function, only called by Score()*/
-double Clock::circuit(double c[30][30]) //doublecheck primarynodes
+int Clock::circuit()
 {
 	//genome[][], aka c[][] is passed by address
 	/*for A*, we need a list of all the elements of c[][] that are nonzero.
@@ -440,67 +417,9 @@ double Clock::circuit(double c[30][30]) //doublecheck primarynodes
 
 	Either that, or rearrange circuit, and pass to it the wanted nodes, and see if
 	a path exists between them.  If that is the case, circuit() may not be needed,
-	A* can just be directly invoked from Score.
+	A* can just be directly invoked from Score.*/
 
-/*%postmat{1:length(c)} = [];
-for i = 1:length(c)
-    postmat{i} = find(c(i,:) ~= 0);
-end*/
-	/*As far as I can tell, c(i,:) is the i'th row of c.
-	  ~= 0 is not equal to zero
-	  find gives the indices of its arguements.
-	  So, we are finding the indices of c not equal to zero.*//*
-	double postmat[30];
-	for(int i=0;i<30;i++)  //does this work?
-	{
-		//scan over the rows and columns of c
-		for(int j=0;j<30;j++)
-			for(int k=0;k<30;k++)
-				if(c[j][k] != 0)
-				{
-					postmat[i] = j;
-					break;
-				}
-				else
-					postmat[i] = -1;  //double check this
-	}
-	//replace above with below
-/*	{
-	int column_push = 0;
-	matrix *ptarget;
-	ptarget = &target;
-	matrix index_list;
-	index_list.allocmat(row, column);
-	for(int i=0;i<row;++i)
-		for(int j=0;j<column;++j)
-			index_list[i][j] = 0x7fffffff;
-
-	for(int i=0;i<row;++i)
-	{
-		for(int j=0;j<column;++j)
-		{
-			if(*ptarget[i][j] != 0)
-			{
-				index_list[i][column_push] = j;
-				column_push++;
-			}
-		}
-		column_push = 0;
-	}
-
-	return index_list;
-}*/
-	AStar.Initialize(row,column,1);  //Width, height, Factor
-	//iterate over the nonzero, noninfinity elements of genome and try and connect them
-	for (int i = 0; i < 40; ++i)
-	{
-		for (int j = 0; j < 41; ++j)
-		{
-			//need to change genome to ACell format.
-			AStar.Heuristic.Start(genome[i][j]; genome[m][n]);
-			AStar.Heuristic.Calculate(genome[i][j], genome[m][n], 1);
-		}
-	}
-
+	for (int x = 0; x < rows;x++)
+	{ }
 	return 0;//somthing;
 }

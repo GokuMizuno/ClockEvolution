@@ -17,6 +17,7 @@ public:
 	~Clock();	//destructor
 	void show();//debugging
 	int Generation();
+	void Generation(int);
 	bool isLocked();
 	void Lock();
 	void Unlock();
@@ -30,14 +31,14 @@ private:
 	bool flag;
 	double mrand();
 	void doPhysics();
-	double genome[rows][columns];
+	int genome[rows][columns];
 	int isBound;
 	int generation;
 	int pendula;
 	int arms;
 	double score;
 	//pathfinding alg.
-	//circuit(double*, double*);
+	int circuit();
 	//time accuracy.
 };
 
