@@ -2,84 +2,170 @@
 
 Clock::Clock() //default constructor
 {
-	/*The cells of the matrix are loaded with mrand(), and manipulated to read 1.0, 2.0, or 0.0 as needed.
-	Using a standard mrand() Gaussian distro, all objects with > 3 sigma are given a value of 2.0,
-	cells < 3 sigma, but > 2 sigma from norm are given 1.0, and all others are 0.0.  Thus, 95% of
-	all cells, that is, gears, ratchets, et al, will do nothing, nor connect to anything.
-
-	In the original paper, rand() is a value between [0,1], and 0.06 or less became 1, whilst
-	0.06 to 0.10 became 2, and everything else mapped to 0.  Each gear gets between 4 and 100 teeth.
-
-	Structure of the clock matrix
-				row			column
-	30 gears	0:29		0:39	for connectivity
-				0:29		40		number of teeth
-	7 hands		30:36		0:39	connectivity
-	1 ratchet	37			0:39	connectivity
-	1 spring	38			0:39	connectivity
-	1 base		39			0:39	connectivity
-	*/
-
-	/*Check gears to make sure number of teeth are greater than items connected to them.
-	For k<row, genome[j][k] = genome[k][j]*/
-
-	//This is merely the create function below
-	generation = 1;
-	flag = 0;
-	int cless = columns-1;
-	int rless = rows-1;
-	for(int j=0;j<rows;j++) //rows
 	{
-		for(int k=0;k<columns;k++) //columns
+		/*The cells of the matrix are loaded with mrand(), and manipulated to read 1.0, 2.0, or 0.0 as needed.
+		Using a standard mrand() Gaussian distro, all objects with > 3 sigma are given a value of 2.0,
+		cells < 3 sigma, but > 2 sigma from norm are given 1.0, and all others are 0.0.  Thus, 95% of
+		all cells, that is, gears, ratchets, et al, will do nothing, nor connect to anything.
+
+		In the original paper, rand() is a value between [0,1], and 0.06 or less became 1, whilst
+		0.06 to 0.10 became 2, and everything else mapped to 0.  Each gear gets between 4 and 100 teeth.
+
+		Structure of the clock matrix
+		row			column
+		30 gears	0:29		0:39	for connectivity
+		0:29		40		number of teeth
+		7 hands		30:36		0:39	connectivity
+		1 ratchet	37			0:39	connectivity
+		1 spring	38			0:39	connectivity
+		1 base		39			0:39	connectivity
+		*/
+
+		/*Check gears to make sure number of teeth are greater than items connected to them.
+		For k<row, gene[j][k] = gene[k][j]*/
+
+		//This is merely the create function below
+		generation = 1;
+		flag = 0;
+		for (int j = 0; j<rows; j++) //rows
 		{
-			if(k == cless)
+			for (int k = j; k<columns; k++) //columns
 			{
-				genome[j][k] = (rand()%100); //# of teeth per gear <=100
-				if(genome[j][k] < 4)
-					genome[j][k] = 4;
-				for(int l=0;l<columns;l++)
+				if (k == (columns - 1))
 				{
-					int sum=0;
-					sum += genome[j][l];
-					if(genome[j][cless] < sum)
-						genome[j][cless] = sum;
+					gene[j][k] = (rand() % 100); //# of teeth per gear <=100
+					if (gene[j][k] < 4)
+						gene[j][k] = 4;
+					for (int l = 0; l<columns; l++)
+					{
+						int sum = 0;
+						sum += gene[j][l];
+						if (gene[j][cless] < sum)
+							gene[j][cless] = sum;
+					}
 				}
-			}
-			else
-			{
-				if(mrand() > 0.997)
-					genome[j][k] = 2;
-				else if((mrand() > 0.954)&&(mrand() < 0.997))
-					genome[j][k] = 1;
 				else
-					genome[j][k] = 0;
+				{
+					if (mrand() > 0.997)
+						gene[j][k] = 2;
+					else if ((mrand() > 0.954) && (mrand() < 0.997))
+						gene[j][k] = 1;
+					else
+						gene[j][k] = 0;
+				}
 			}
 		}
 	}
-}
 
+}
 Clock::~Clock()
 {
 
 }
 
-void Clock::show(void)
+class Clock
 {
-	for(int i=0;i<rows;i++)
+	void generate()
 	{
-		for(int j=0;j<columns;j++)
-		{
-			std::cout << genome[i][j] << '\t';
-		}
-		std::cout << std::endl;
-	}
-}
+		/*The cells of the matrix are loaded with mrand(), and manipulated to read 1.0, 2.0, or 0.0 as needed.
+		Using a standard mrand() Gaussian distro, all objects with > 3 sigma are given a value of 2.0,
+		cells < 3 sigma, but > 2 sigma from norm are given 1.0, and all others are 0.0.  Thus, 95% of
+		all cells, that is, gears, ratchets, et al, will do nothing, nor connect to anything.
 
-int Clock::Generation()  {  return generation;  }
-void Clock::Generation(int newGen)  { generation = newGen; }
-bool Clock::isLocked()  {  return flag;  }
-void Clock::Lock()  {  flag = 1;  }
-void Clock::Unlock()  {  flag = 0;  }
+		In the original paper, rand() is a value between [0,1], and 0.06 or less became 1, whilst
+		0.06 to 0.10 became 2, and everything else mapped to 0.  Each gear gets between 4 and 100 teeth.
+
+		Structure of the clock matrix
+		object		row			column
+		30 gears	0:29		0:39	for connectivity
+		""			0:29		40		number of teeth
+		7 hands		30:36		0:39	connectivity
+		1 ratchet	37			0:39	connectivity
+		1 spring	38			0:39	connectivity
+		1 base		39			0:39	connectivity
+		*/
+
+		/*Check gears to make sure number of teeth are greater than items connected to them.
+		For k<row, gene[j][k] = gene[k][j]*/
+
+		//This is merely the create function below
+		generation = 1;
+		flag = 0;
+		for (int j = 0; j<rows; j++) //rows
+		{
+			for (int k = j; k<columns; k++) //columns
+			{
+				if (k == j)  //no object can touch itself, so we zero the identity matrix
+				{
+					gene[j][k] = 0;
+				}
+				if (k == (columns-1))
+				{
+					gene[j][k] = ((rand() % 96 + 4)); //# of teeth per gear in range [4,100]
+					for (int l = 0; l<columns; l++)
+					{
+						int sum = 0;
+						sum += gene[j][l];
+						if (gene[j][(column -1)] < sum)
+							gene[j][(column -1)] = sum;
+					}
+				}
+				else
+				{
+					if (mrand() > 0.997)
+					{
+						gene[j][k] = 2;
+						gene[k][j] = 2;
+					}
+					else if ((mrand() > 0.954) && (mrand() < 0.997))
+					{
+						gene[j][k] = 1;
+						gene[k][j] = 1;
+					}
+					else
+					{
+						gene[j][k] = 0;
+						gene[k][j] = 0;
+					}
+				}
+			}
+		}
+	}
+	void setDimensions(int x, int y)
+	{
+		rows = x;
+		columns = y;
+	}
+	void Clock::show(void)
+	{
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0; j < columns; j++)
+			{
+				std::cout << gene[i][j] << '\t';
+			}
+			std::cout << std::endl;
+		}
+	}
+	int generation()  { return generation; }
+	void generation(int newGen)  { generation = newGen; }
+	bool isLocked()  { return flag; }
+	void lock() { flag = 1; }
+	void unlock() { flag = 0; }
+	double mrand()
+	{
+		double u, v, r;
+		do
+		{
+			u = ((double)rand() / (RAND_MAX)) * 2 - 1;
+			v = ((double)rand() / (RAND_MAX)) * 2 - 1;
+			r = u*u + v*v;
+		} while (r>1);
+		return r;
+	}
+
+};
+
 
 double Clock::Score()
 {
@@ -181,7 +267,7 @@ double Clock::Score()
 		if(g2.size() <= 1) //double check the <= 1 parameter
 		//if(length(find(conn(g,1:40) != 0)) <= 1)
 		{
-			s = genome[h][41]/1000;
+			s = gene[h][41]/1000;
 			if(s > 0)
 			{
 				p_count++;
@@ -236,21 +322,9 @@ double Clock::Score()
 	return score;
 }
 
-double Clock::mrand()
-{
-	double u,v,r;
-	do
-	{
-		u = ((double)rand()/(RAND_MAX))*2-1;
-		v = ((double)rand()/(RAND_MAX))*2-1;
-		r = u*u + v*v;
-	}while(r>1);
-	return r;
-}
-
 void Clock::doPhysics()
 {
-	/*Now that the genome has been made, time to make it conform to physics
+	/*Now that the gene has been made, time to make it conform to physics
 	  Starting from the bottom, we make sure that:
 	  Springs can only be attached to 4 items
 	  Ratchets can only be attached to 3 items
@@ -269,7 +343,7 @@ void Clock::doPhysics()
 	v.reserve(5);
 	for(int j=cless;j<=0;j--) //double check to make sure this is cless or columns
 	{
-		if((1 == genome[i][j])&&(2 == genome[i][j]))
+		if((1 == gene[i][j])&&(2 == gene[i][j]))
 		{
 			v.push_back(j);
 		}
@@ -277,7 +351,7 @@ void Clock::doPhysics()
 		while(qq > 4)
 		{
 			//get 4 random elements and pull them from v, then drop the rest
-			//-1 is to prevent genome[i][0] from mucking things up
+			//-1 is to prevent gene[i][0] from mucking things up
 			v.at(rand()%v.size()) = -1;
 			qq--;
 		}
@@ -286,10 +360,10 @@ void Clock::doPhysics()
 		{
 			if(*it == -1)
 			{
-				/*For some reason, VS2010 throws an error at genome[i][*it]*/
+				/*For some reason, VS2010 throws an error at gene[i][*it]*/
 				int q = *it;
-				genome[i][q] = 0;
-				genome[q][i] = 0;
+				gene[i][q] = 0;
+				gene[q][i] = 0;
 			}
 			v.pop_back();
 		}
@@ -300,7 +374,7 @@ void Clock::doPhysics()
 	v.reserve(5);
 	for(int j=cless;j<=0;j--)
 	{
-		if((1 == genome[i][j])&&(2 == genome[i][j]))
+		if((1 == gene[i][j])&&(2 == gene[i][j]))
 		{
 			v.push_back(j);
 		}
@@ -308,7 +382,7 @@ void Clock::doPhysics()
 		while(qq > 3)
 		{
 			//get 3 random elements and pull them from v, then drop the rest
-			//-1 is to prevent genome[i][0] from mucking things up
+			//-1 is to prevent gene[i][0] from mucking things up
 			//one element via the teeth, two via center
 			v.at(rand()%v.size()) = -1;
 			qq--;
@@ -319,10 +393,10 @@ void Clock::doPhysics()
 		{
 			if(*it == -1)
 			{
-				/*For some reason, VS2010 throws an error at genome[i][*it]*/
+				/*For some reason, VS2010 throws an error at gene[i][*it]*/
 				int q = *it;
-				genome[i][q] = 0;
-				genome[q][i] = 0;
+				gene[i][q] = 0;
+				gene[q][i] = 0;
 			}
 			v.pop_back();
 		}
@@ -334,7 +408,7 @@ void Clock::doPhysics()
 	{
 		for(int j=cless;j<=0;j--)
 		{
-			if((1 == genome[i][j])&&(2 == genome[i][j]))
+			if((1 == gene[i][j])&&(2 == gene[i][j]))
 			{
 				v.push_back(j);
 			}
@@ -342,7 +416,7 @@ void Clock::doPhysics()
 			while(qq > 4)
 			{
 			//get 4 random elements and pull them from v, then drop the rest
-			//-1 is to prevent genome[i][0] from mucking things up
+			//-1 is to prevent gene[i][0] from mucking things up
 				v.at(rand()%v.size()) = -1;
 				qq--;
 			}
@@ -352,10 +426,10 @@ void Clock::doPhysics()
 			{
 				if(*it == -1)
 				{
-				/*For some reason, VS2010 throws an error at genome[i][*it]*/
+				/*For some reason, VS2010 throws an error at gene[i][*it]*/
 					int q = *it;
-					genome[i][q] = 0;
-					genome[q][i] = 0;
+					gene[i][q] = 0;
+					gene[q][i] = 0;
 				}
 				v.pop_back();
 			}
@@ -368,7 +442,7 @@ void Clock::doPhysics()
 	{
 		for(int j=cless;j<=0;j--)
 		{
-			if((1.0 == genome[i][j])&&(2.0 == genome[i][j]))
+			if((1.0 == gene[i][j])&&(2.0 == gene[i][j]))
 			{
 				v.push_back(j);
 			}
@@ -376,7 +450,7 @@ void Clock::doPhysics()
 			while(qq > 4)
 			{
 			//get 4 random elements and pull them from v, then drop the rest
-			//-1 is to prevent genome[i][0] from mucking things up
+			//-1 is to prevent gene[i][0] from mucking things up
 				v.at(rand()%v.size()) = -1;
 				qq--;
 			}
@@ -386,30 +460,30 @@ void Clock::doPhysics()
 			{
 				if(*it != -1)
 				{
-				/*For some reason, VS2010 throws an error at genome[i][*it]*/
+				/*For some reason, VS2010 throws an error at gene[i][*it]*/
 					int q = *it;
-					genome[i][q] = 0;
-					genome[q][i] = 0;
+					gene[i][q] = 0;
+					gene[q][i] = 0;
 				}
 				v.pop_back();
 			}
 		}
 	}
 	/*Bidirectionality
-	  Start from bottom due to having already fixed the lower part of the matrix*/
-	for(int i =rless;i>0;i--)
-		for (int j = cless; j > 0; j--)
+	  Start from bottom due to having already fixed the lower part of the matrix
+	  We note that an object cannot touch itself, so the identity matrix is blanked*/
+	for(int i =(rows-1);i>0;i--)
+		for (int j = (columns-1); j > 0; j--)
 		{
-			genome[j][i] = genome[i][j];
+			gene[j][i] = gene[i][j];
 			if (i == j)
-				genome[i][j] = 0;
+				gene[i][j] = 0;
 		}
 }
 
 /*Private function, only called by Score()*/
 int Clock::circuit()
 {
-	//genome[][], aka c[][] is passed by address
 	/*for A*, we need a list of all the elements of c[][] that are nonzero.
 	We pass that list to A*, and iterate over it, looking for a path between
 	two nodes.

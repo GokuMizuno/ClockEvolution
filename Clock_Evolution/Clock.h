@@ -15,23 +15,25 @@ public:
 	  Lock when starting to use, unlock when done.*/
 	Clock();	//constructor
 	~Clock();	//destructor
+	void generate();  //should this be generate(int row,int column);?
 	void show();//debugging
-	int Generation();
-	void Generation(int);
+	int generation();
+	void generation(int);
 	bool isLocked();
-	void Lock();
-	void Unlock();
-	double Score();
+	void lock();
+	void unlock();
+	double score();
+	void setDimensions(int, int);
 	friend void mate(Clock&, Clock&, Clock&);
 	friend void mate(Clock*);
 	friend void mutate(Clock&);
-	static const int rows = 40;
-	static const int columns = 41;
 private:
 	bool flag;
+	static int rows = 40;
+	static int columns = 41;
 	double mrand();
 	void doPhysics();
-	int genome[rows][columns];
+	int gene[rows][columns];
 	int isBound;
 	int generation;
 	int pendula;

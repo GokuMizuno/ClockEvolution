@@ -1,13 +1,13 @@
 #include "stdfax.h"
 /*This file has both the mating and mutating functions for the clocks.
-  Since both are working with the genome of the function, both are
+  Since both are working with the gene of the function, both are
   friends, and hence, it seems natural they go together.*/
 
-/*Mating involves taking the genome of two clocks, and merging them.
+/*Mating involves taking the gene of two clocks, and merging them.
   cdk007 uses a random matrix, mapped to either 0 or 1, and if 0, then
-  get genome from father, 1, get genome from mother.
+  get gene from father, 1, get gene from mother.
   
-  Aftr mating, apply a mutation to the child's genome.*/
+  Aftr mating, apply a mutation to the child's gene.*/
 
 //change all of this to deal with pointers
 
@@ -63,9 +63,9 @@ void mate(Clock *ck0, Clock *ck1, Clock *ck2)
 		for(int j=0;j<Clock::columns;j++)
 		{
 			if(round((double)(rand()/RAND_MAX)) == 0)
-				spl[2]->genome[i][j] = (*spl[0]).genome[i][j];
+				spl[2]->gene[i][j] = (*spl[0]).gene[i][j];
 			else
-				*spl[2].genome[i][j] = spl[1].genome[i][j];
+				*spl[2].gene[i][j] = spl[1].gene[i][j];
 		}
 	}
 	spl[2]->generation = generation;
@@ -80,11 +80,11 @@ void mutate(Clock &ck3)
 		{
 			mutround = (double)rand()/(double)RAND_MAX;
 				if(mutround <= 0.05)
-					ck3.genome[i][j] = 1;
+					ck3.gene[i][j] = 1;
 				else if((mutround <= 0.1)&&(mutround >= 0.05))
-					ck3.genome[i][j] = 2;
+					ck3.gene[i][j] = 2;
 				/*else
-					ck3.genome[i][j] = ck3.genome[i][j];*/
+					ck3.gene[i][j] = ck3.gene[i][j];*/
 		}
 		ck3.doPhysics();
 	//return ck3;  //needs to be &ck3

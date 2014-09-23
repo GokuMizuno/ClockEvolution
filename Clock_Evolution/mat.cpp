@@ -94,7 +94,7 @@ matrix matrix::indices(int row, int column, matrix &target)
 	return index_list;
 }
 
-//used for matrix index = genome.indices().
+//used for matrix index = gene.indices().
 /*Yeah, this doesn't work.
 double matrix::indices()
 {
@@ -107,14 +107,14 @@ double matrix::indices()
 	return matrix_list;
 }*/
 
-/*What about using size(genome) to get dim, and making an index list that only matches a given number*//*
-double matrix::indices(double number, double &genome)
+/*What about using size(gene) to get dim, and making an index list that only matches a given number*//*
+double matrix::indices(double number, double &gene)
 {
 	int column_push = 0;
-	matrix index_list[*genome.row()][*genome.column()];
+	matrix index_list[*gene.row()][*gene.column()];
 	for(int i=0;i<row;++i)
 		for(int j=0;j<column;++j)
-			if(genome[i][j] == number)
+			if(gene[i][j] == number)
 			{
 				index_list[i][column_push] = j;
 				column_push++;
