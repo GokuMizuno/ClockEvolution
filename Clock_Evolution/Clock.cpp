@@ -85,11 +85,10 @@ class Clock
 		1 base		39			0:39	connectivity
 		*/
 
-		/*Check gears to make sure number of teeth are greater than items connected to them.
-		For k<row, gene[j][k] = gene[k][j]*/
+		/*Check gears to make sure number of teeth are greater than items connected to them.*/
 
 		//This is merely the create function below
-		generation = 1;
+		gen = 1;
 		flag = 0;
 		for (int j = 0; j<rows; j++) //rows
 		{
@@ -136,7 +135,7 @@ class Clock
 		rows = x;
 		columns = y;
 	}
-	void Clock::show(void)
+	void show(void)
 	{
 		for (int i = 0; i < rows; i++)
 		{
@@ -147,8 +146,8 @@ class Clock
 			std::cout << std::endl;
 		}
 	}
-	int generation()  { return generation; }
-	void generation(int newGen)  { generation = newGen; }
+	int generation()  { return gen; }
+	void generation(int newGen)  { gen = newGen; }
 	bool isLocked()  { return flag; }
 	void lock() { flag = 1; }
 	void unlock() { flag = 0; }
@@ -163,9 +162,118 @@ class Clock
 		} while (r>1);
 		return r;
 	}
+	std::vector<int> returnVector(int row, int AllowedItems, std::vector<int>& rVec)
+	{
+		int a;
+		rVec.reserve(5);
+		for (int i = 0; i < columns-2; i++)
+		{
+			if ((1 == gene[row][i]) || (2 == gene[row][i]))
+			{
+				rVec.push_back(i);
+			}
+			int qq = rVec.size();
+			while (qq > AllowedItems)
+			{
+				a = rand() % rVec.size();
+				if (rVec.at(a) != -1)
+				{
+					rVec.at(a) = -1;
+					qq--;
+				}
+				else
+					continue;
+
+			}
+		}
+
+		return rVec;
+	}
+	void doPhysics()
+	{
+		/*Now that the gene has been made, time to make it conform to physics
+		Starting from the bottom, we make sure that:
+		Springs can only be attached to 4 items
+		Ratchets can only be attached to 3 items
+		Hands can only be attached to 4 items
+		Gears can only be attached to as may items as they have teeth
+
+		We get a list of connections for each object, then chose randomly from that list.
+		After making sure that the bottom object is in conformance with the laws of physics,
+		we use bidirectional connectivity to make sure that since A touches B, B touches A*/
+		std::vector<int> v;
+
+		/*Spring*/
+		v = returnVector(38, 4, v);
+		//the last thing we do is clear the vector
+		for (std::vector<int>::iterator it = v.end(); it != v.begin(); it--)
+		{
+			if (*it == -1)
+			{
+				gene[i][*it] = 0;
+				gene[*it][i] = 0;
+			}
+			v.pop_back();
+		}
+
+		/*Ratchets*/
+		v = returnVector(37, 3, v);
+		//the last thing we do is clear the vector
+		for (std::vector<int>::iterator it = v.end(); it != v.begin(); it--)
+		{
+			if (*it == -1)
+			{
+				gene[i][*it] = 0;
+				gene[*it][i] = 0;
+			}
+			v.pop_back();
+		}
+
+		/*7 Hands*/
+		for (int i = 36; i > 29; i--)
+		{
+			v = returnVector(i, 4, v);
+			//the last thing we do is clear the vector
+			for (std::vector<int>::iterator it = v.end(); it != v.begin(); it--)
+			{
+				if (*it == -1)
+				{
+					gene[i][*it] = 0;
+					gene[*it][i] = 0;
+				}
+				v.pop_back();
+			}
+		}
+
+		/*Gears*/
+		v.reserve(5);
+		for (i = 29; i >= 0; i--)
+		{
+			v = returnVector(i, 4, v);
+			//the last thing we do is clear the vector
+			for (std::vector<int>::iterator it = v.end(); it != v.begin(); it--)
+			{
+				if (*it != -1)
+				{
+					gene[i][*it] = 0;
+					gene[*it][i] = 0;
+				}
+				v.pop_back();
+			}
+		}
+		/*Bidirectionality
+		Start from bottom due to having already fixed the lower part of the matrix
+		We note that an object cannot touch itself, so the identity matrix is blanked*/
+		for (int i = (rows - 1); i>0; i--)
+			for (int j = (columns - 1); j > 0; j--)
+			{
+			gene[j][i] = gene[i][j];
+			if (i == j)
+				gene[i][j] = 0;
+			}
+	}
 
 };
-
 
 double Clock::Score()
 {
@@ -322,167 +430,8 @@ double Clock::Score()
 	return score;
 }
 
-void Clock::doPhysics()
-{
-	/*Now that the gene has been made, time to make it conform to physics
-	  Starting from the bottom, we make sure that:
-	  Springs can only be attached to 4 items
-	  Ratchets can only be attached to 3 items
-	  Hands can only be attached to 4 items
-	  Gears can only be attached to as may items as they have teeth
-	  
-	  We get a list of connections for each object, then chose randomly from that list.
-	  After making sure that the bottom object is in conformance with the laws of physics,
-	  we use bidirectional connectivity to make sure that since A touches B, B touches A*/
-	int cless = columns-2;  //last column is used for #teeth/ger
-	int rless = rows-1;
-	std::vector<int> v;
-
-	/*Spring*/
-	int i=38;
-	v.reserve(5);
-	for(int j=cless;j<=0;j--) //double check to make sure this is cless or columns
-	{
-		if((1 == gene[i][j])&&(2 == gene[i][j]))
-		{
-			v.push_back(j);
-		}
-		int qq = v.size();
-		while(qq > 4)
-		{
-			//get 4 random elements and pull them from v, then drop the rest
-			//-1 is to prevent gene[i][0] from mucking things up
-			v.at(rand()%v.size()) = -1;
-			qq--;
-		}
-		//the last thing we do is clear the vector
-		for(std::vector<int>::iterator it=v.end();it!=v.begin();it--)
-		{
-			if(*it == -1)
-			{
-				/*For some reason, VS2010 throws an error at gene[i][*it]*/
-				int q = *it;
-				gene[i][q] = 0;
-				gene[q][i] = 0;
-			}
-			v.pop_back();
-		}
-	}
-
-	/*Ratchets*/
-	i=37;
-	v.reserve(5);
-	for(int j=cless;j<=0;j--)
-	{
-		if((1 == gene[i][j])&&(2 == gene[i][j]))
-		{
-			v.push_back(j);
-		}
-		int qq = v.size();
-		while(qq > 3)
-		{
-			//get 3 random elements and pull them from v, then drop the rest
-			//-1 is to prevent gene[i][0] from mucking things up
-			//one element via the teeth, two via center
-			v.at(rand()%v.size()) = -1;
-			qq--;
-		}
-
-		//the last thing we do is clear the vector
-		for(std::vector<int>::iterator it=v.end();it!=v.begin();it--)
-		{
-			if(*it == -1)
-			{
-				/*For some reason, VS2010 throws an error at gene[i][*it]*/
-				int q = *it;
-				gene[i][q] = 0;
-				gene[q][i] = 0;
-			}
-			v.pop_back();
-		}
-	}
-
-	/*7 Hands*/
-	v.reserve(5);
-	for(i=36;i>29;i--)
-	{
-		for(int j=cless;j<=0;j--)
-		{
-			if((1 == gene[i][j])&&(2 == gene[i][j]))
-			{
-				v.push_back(j);
-			}
-			int qq = v.size();
-			while(qq > 4)
-			{
-			//get 4 random elements and pull them from v, then drop the rest
-			//-1 is to prevent gene[i][0] from mucking things up
-				v.at(rand()%v.size()) = -1;
-				qq--;
-			}
-
-		//the last thing we do is clear the vector
-			for(std::vector<int>::iterator it=v.end();it!=v.begin();it--)
-			{
-				if(*it == -1)
-				{
-				/*For some reason, VS2010 throws an error at gene[i][*it]*/
-					int q = *it;
-					gene[i][q] = 0;
-					gene[q][i] = 0;
-				}
-				v.pop_back();
-			}
-		}
-	}
-
-	/*Gears*/
-	v.reserve(5);
-	for(i=29;i>=0;i--)
-	{
-		for(int j=cless;j<=0;j--)
-		{
-			if((1.0 == gene[i][j])&&(2.0 == gene[i][j]))
-			{
-				v.push_back(j);
-			}
-			int qq = v.size();
-			while(qq > 4)
-			{
-			//get 4 random elements and pull them from v, then drop the rest
-			//-1 is to prevent gene[i][0] from mucking things up
-				v.at(rand()%v.size()) = -1;
-				qq--;
-			}
-
-		//the last thing we do is clear the vector
-			for(std::vector<int>::iterator it=v.end();it!=v.begin();it--)
-			{
-				if(*it != -1)
-				{
-				/*For some reason, VS2010 throws an error at gene[i][*it]*/
-					int q = *it;
-					gene[i][q] = 0;
-					gene[q][i] = 0;
-				}
-				v.pop_back();
-			}
-		}
-	}
-	/*Bidirectionality
-	  Start from bottom due to having already fixed the lower part of the matrix
-	  We note that an object cannot touch itself, so the identity matrix is blanked*/
-	for(int i =(rows-1);i>0;i--)
-		for (int j = (columns-1); j > 0; j--)
-		{
-			gene[j][i] = gene[i][j];
-			if (i == j)
-				gene[i][j] = 0;
-		}
-}
-
 /*Private function, only called by Score()*/
-int Clock::circuit()
+int Clock::circuit(int startrow, int endrow)
 {
 	/*for A*, we need a list of all the elements of c[][] that are nonzero.
 	We pass that list to A*, and iterate over it, looking for a path between
@@ -493,7 +442,9 @@ int Clock::circuit()
 	a path exists between them.  If that is the case, circuit() may not be needed,
 	A* can just be directly invoked from Score.*/
 
-	for (int x = 0; x < rows;x++)
-	{ }
+	bool IsGoal = false;
+	do
+	{
+	} while (IsGoal == false);
 	return 0;//somthing;
 }

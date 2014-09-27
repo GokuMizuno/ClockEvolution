@@ -27,7 +27,7 @@ public:
 	friend void mate(Clock&, Clock&, Clock&);
 	friend void mate(Clock*);
 	friend void mutate(Clock&);
-private:
+protected:
 	bool flag;
 	static int rows = 40;
 	static int columns = 41;
@@ -35,12 +35,14 @@ private:
 	void doPhysics();
 	int gene[rows][columns];
 	int isBound;
-	int generation;
+	int gen;
 	int pendula;
 	int arms;
 	double score;
+private:
 	//pathfinding alg.
-	int circuit();
+	int circuit(int, int);
+	std::vector<int> returnVector(int, int, std::vector<int>&);
 	//time accuracy.
 };
 
