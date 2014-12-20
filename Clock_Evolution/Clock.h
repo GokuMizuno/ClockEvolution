@@ -27,6 +27,15 @@ public:
 	friend void mate(Clock&, Clock&, Clock&);
 	friend void mate(Clock*);
 	friend void mutate(Clock&);
+	class Heutristic
+	{
+		virtual void Start(int, int) = 0;
+		virtual int Calculate(int, int) = 0;
+		virtual bool IsGoal() { return true; };
+		virtual bool IsCancel(int) = 0;  //is this needed?
+		virtual bool Step() = 0;
+		virtual ~Heutristic(){};
+	};
 protected:
 	bool flag;
 	static int rows = 40;
@@ -38,7 +47,7 @@ protected:
 	int gen;
 	int pendula;
 	int arms;
-	double score;
+	double score; = 0
 private:
 	//pathfinding alg.
 	int circuit(int, int);

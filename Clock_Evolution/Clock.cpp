@@ -274,7 +274,7 @@ class Clock
 	}
 
 };
-
+/*Score should only be run after doPhysics()*/
 double Clock::Score()
 {
 	double score, physics;
@@ -286,55 +286,6 @@ double Clock::Score()
 	  Each arm/pendula is worth some multiplier times how accurate it is*/
 	/*First begin with a circuit algol.
 	  Then do time accuracy*/
-	
-	//The circuit_distance.m function finds the shortest path between every
-	// pair of gears.
-	/*for(int i=;;)
-	{
-		for(int j=;;)
-			something[i][j] = circuit(gconn2,baseg);
-	}*/
-	
-	//in an nxm array, length is n>m?n:m  equal to max(size(array))
-	for g=1:length(baseg)
-		keepg = ~isnan(d2(baseg(g),:)); //what. the. hell?
-	keep(keepg==1) = 1;
-	end
-
-	for(int g=0;g<=40;++g) //c++
-	{}
-
-	double conn[40][41], gconn[30][30];
-	for(int a=0;a<40;++a)
-		for(int b=0;b<30;++b)
-			conn[a][b] = 0.0;
-	for(int a=0;a<30;++a)
-		for(int b=0;b<30;++b)
-			gconn[a][b] = 0.0;
-	
-	for(int a=0;a<40;++a)
-	{
-		for(int b=0;b<30;++b)
-		{
-			if(keep[a][b] == 1)
-				conn[a][b] = 1;
-			if((a<30)&&(b<30))
-				gconn[a][b] = conn[a][b];
-		}
-	}
-
-	for(int r=0;r<30;++r)
-	{
-		if(keep[r] == 0)
-		{
-			for(int a=0;a<30;++a)
-			{
-				gconn[r][a] = 0;
-				gconn[a][r] = 0;
-			}
-		}
-	}
-
 
 /* Check for a pendulum: a hand that is attached to the base
 % that hand may be attached to a gear, but that gear cannot
@@ -355,12 +306,12 @@ double Clock::Score()
 
 	for(int h=30;h<37;++h)
 	{
-		if(conn[40][h] != 0)
+		if(gene[40][h] != 0)  //base is attached to a pendula
 		{
-			for(int a=0;a<30;++a)
+			for(int a=0;a<30;++a)  //pendula is attached to a gear
 			{
-				if(conn[h][a] != 0)
-					g.push_back(conn[h][a]);
+				if(gene[h][a] != 0)
+					g.push_back(gene[h][a]);  //useless
 			}
 			//g=find(conn(h,1:30) != 0);  //see if the base/hand combo is attached to a gear
 			if(g.size() == 0) // no pendula
@@ -433,18 +384,17 @@ double Clock::Score()
 /*Private function, only called by Score()*/
 int Clock::circuit(int startrow, int endrow)
 {
-	/*for A*, we need a list of all the elements of c[][] that are nonzero.
-	We pass that list to A*, and iterate over it, looking for a path between
-	two nodes.
-	We then return that matrix, and let Score do it's thing to the returned matrix.
-
-	Either that, or rearrange circuit, and pass to it the wanted nodes, and see if
-	a path exists between them.  If that is the case, circuit() may not be needed,
-	A* can just be directly invoked from Score.*/
-
+	std::vector<int> Path;
+	std::priority_queue<int> openset;
+	std::tuple<int, int> 
 	bool IsGoal = false;
 	do
 	{
+		for (int z = 0; z < startrow; z++)
+		{
+			if (gene[startrow][z] != 0)
+				openset.push(z);
+		}
 	} while (IsGoal == false);
 	return 0;//somthing;
 }
