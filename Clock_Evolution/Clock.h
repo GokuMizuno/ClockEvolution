@@ -53,7 +53,7 @@ public:
 	int getNotNullPieces() { return notNullPieces; };
 	//double getSurvivalScore() {return score;};
 	int getNumHands() { return numHands; };
-	bool hasGearTrain(); { timeGears[0].getPieceInterval() > 0 || timeGears[1].getPieceInterval() > 0 || timeGears[2].getPieceInterval() > 0; };
+	bool hasGearTrain() { timeGears[0].getPieceInterval() > 0 || timeGears[1].getPieceInterval() > 0 || timeGears[2].getPieceInterval() > 0; };
 	~Clock();	//destructor
 	void show();//debugging
 	int generation();
