@@ -1,400 +1,404 @@
 #include "stdfax.h"
-
-Clock::Clock() //default constructor
+ClockPiece::ClockPiece()
 {
+	PieceType = rand() % numUniqueParts;
+	PieceInterval = 0;
+	PendulumLength = 0;
+	numTeeth = minGearTeeth;
+	isConnected = false;
+	isPowered = false;
+	isAttachedtoHand = false;
+
+	if (pendulum == PieceType)
+	{  PendulumLength = (double)rand() / RAND_MAX;	}
+	else if (gear == PieceType)
 	{
-		/*The cells of the matrix are loaded with mrand(), and manipulated to read 1.0, 2.0, or 0.0 as needed.
-		Using a standard mrand() Gaussian distro, all objects with > 3 sigma are given a value of 2.0,
-		cells < 3 sigma, but > 2 sigma from norm are given 1.0, and all others are 0.0.  Thus, 95% of
-		all cells, that is, gears, ratchets, et al, will do nothing, nor connect to anything.
-
-		In the original paper, rand() is a value between [0,1], and 0.06 or less became 1, whilst
-		0.06 to 0.10 became 2, and everything else mapped to 0.  Each gear gets between 4 and 100 teeth.
-
-		Structure of the clock matrix
-		row			column
-		30 gears	0:29		0:39	for connectivity
-		0:29		40		number of teeth
-		7 hands		30:36		0:39	connectivity
-		1 ratchet	37			0:39	connectivity
-		1 spring	38			0:39	connectivity
-		1 base		39			0:39	connectivity
-		*/
-
-		/*Check gears to make sure number of teeth are greater than items connected to them.
-		For k<row, gene[j][k] = gene[k][j]*/
-
-		//This is merely the create function below
-		generation = 1;
-		flag = 0;
-		for (int j = 0; j<rows; j++) //rows
-		{
-			for (int k = j; k<columns; k++) //columns
-			{
-				if (k == (columns - 1))
-				{
-					gene[j][k] = (rand() % 100); //# of teeth per gear <=100
-					if (gene[j][k] < 4)
-						gene[j][k] = 4;
-					for (int l = 0; l<columns; l++)
-					{
-						int sum = 0;
-						sum += gene[j][l];
-						if (gene[j][cless] < sum)
-							gene[j][cless] = sum;
-					}
-				}
-				else
-				{
-					if (mrand() > 0.997)
-						gene[j][k] = 2;
-					else if ((mrand() > 0.954) && (mrand() < 0.997))
-						gene[j][k] = 1;
-					else
-						gene[j][k] = 0;
-				}
-			}
-		}
+		numTeeth = rand();
+		if (numTeeth < minGearTeeth)
+			numTeeth = minGearTeeth;
 	}
-
-}
-Clock::~Clock()
-{
-
 }
 
-class Clock
+Clock::Clock(int genomeSize)
 {
-	void generate()
-	{
-		/*The cells of the matrix are loaded with mrand(), and manipulated to read 1.0, 2.0, or 0.0 as needed.
-		Using a standard mrand() Gaussian distro, all objects with > 3 sigma are given a value of 2.0,
-		cells < 3 sigma, but > 2 sigma from norm are given 1.0, and all others are 0.0.  Thus, 95% of
-		all cells, that is, gears, ratchets, et al, will do nothing, nor connect to anything.
-
-		In the original paper, rand() is a value between [0,1], and 0.06 or less became 1, whilst
-		0.06 to 0.10 became 2, and everything else mapped to 0.  Each gear gets between 4 and 100 teeth.
-
-		Structure of the clock matrix
-		object		row			column
-		30 gears	0:29		0:39	for connectivity
-		""			0:29		40		number of teeth
-		7 hands		30:36		0:39	connectivity
-		1 ratchet	37			0:39	connectivity
-		1 spring	38			0:39	connectivity
-		1 base		39			0:39	connectivity
-		*/
-
-		/*Check gears to make sure number of teeth are greater than items connected to them.*/
-
-		//This is merely the create function below
-		gen = 1;
-		flag = 0;
-		for (int j = 0; j<rows; j++) //rows
-		{
-			for (int k = j; k<columns; k++) //columns
-			{
-				if (k == j)  //no object can touch itself, so we zero the identity matrix
-				{
-					gene[j][k] = 0;
-				}
-				if (k == (columns-1))
-				{
-					gene[j][k] = ((rand() % 96 + 4)); //# of teeth per gear in range [4,100]
-					for (int l = 0; l<columns; l++)
-					{
-						int sum = 0;
-						sum += gene[j][l];
-						if (gene[j][(column -1)] < sum)
-							gene[j][(column -1)] = sum;
-					}
-				}
-				else
-				{
-					if (mrand() > 0.997)
-					{
-						gene[j][k] = 2;
-						gene[k][j] = 2;
-					}
-					else if ((mrand() > 0.954) && (mrand() < 0.997))
-					{
-						gene[j][k] = 1;
-						gene[k][j] = 1;
-					}
-					else
-					{
-						gene[j][k] = 0;
-						gene[k][j] = 0;
-					}
-				}
-			}
-		}
-	}
-	void setDimensions(int x, int y)
-	{
-		rows = x;
-		columns = y;
-	}
-	void show(void)
-	{
-		for (int i = 0; i < rows; i++)
-		{
-			for (int j = 0; j < columns; j++)
-			{
-				std::cout << gene[i][j] << '\t';
-			}
-			std::cout << std::endl;
-		}
-	}
-	int generation()  { return gen; }
-	void generation(int newGen)  { gen = newGen; }
-	bool isLocked()  { return flag; }
-	void lock() { flag = 1; }
-	void unlock() { flag = 0; }
-	double mrand()
-	{
-		double u, v, r;
-		do
-		{
-			u = ((double)rand() / (RAND_MAX)) * 2 - 1;
-			v = ((double)rand() / (RAND_MAX)) * 2 - 1;
-			r = u*u + v*v;
-		} while (r>1);
-		return r;
-	}
-	std::vector<int> returnVector(int row, int AllowedItems, std::vector<int>& rVec)
-	{
-		int a;
-		rVec.reserve(5);
-		for (int i = 0; i < columns-2; i++)
-		{
-			if ((1 == gene[row][i]) || (2 == gene[row][i]))
-			{
-				rVec.push_back(i);
-			}
-			int qq = rVec.size();
-			while (qq > AllowedItems)
-			{
-				a = rand() % rVec.size();
-				if (rVec.at(a) != -1)
-				{
-					rVec.at(a) = -1;
-					qq--;
-				}
-				else
-					continue;
-
-			}
-		}
-
-		return rVec;
-	}
-	void doPhysics()
-	{
-		/*Now that the gene has been made, time to make it conform to physics
-		Starting from the bottom, we make sure that:
-		Springs can only be attached to 4 items
-		Ratchets can only be attached to 3 items
-		Hands can only be attached to 4 items
-		Gears can only be attached to as may items as they have teeth
-
-		We get a list of connections for each object, then chose randomly from that list.
-		After making sure that the bottom object is in conformance with the laws of physics,
-		we use bidirectional connectivity to make sure that since A touches B, B touches A*/
-		std::vector<int> v;
-
-		/*Spring*/
-		v = returnVector(38, 4, v);
-		//the last thing we do is clear the vector
-		for (std::vector<int>::iterator it = v.end(); it != v.begin(); it--)
-		{
-			if (*it == -1)
-			{
-				gene[i][*it] = 0;
-				gene[*it][i] = 0;
-			}
-			v.pop_back();
-		}
-
-		/*Ratchets*/
-		v = returnVector(37, 3, v);
-		//the last thing we do is clear the vector
-		for (std::vector<int>::iterator it = v.end(); it != v.begin(); it--)
-		{
-			if (*it == -1)
-			{
-				gene[i][*it] = 0;
-				gene[*it][i] = 0;
-			}
-			v.pop_back();
-		}
-
-		/*7 Hands*/
-		for (int i = 36; i > 29; i--)
-		{
-			v = returnVector(i, 4, v);
-			//the last thing we do is clear the vector
-			for (std::vector<int>::iterator it = v.end(); it != v.begin(); it--)
-			{
-				if (*it == -1)
-				{
-					gene[i][*it] = 0;
-					gene[*it][i] = 0;
-				}
-				v.pop_back();
-			}
-		}
-
-		/*Gears*/
-		v.reserve(5);
-		for (i = 29; i >= 0; i--)
-		{
-			v = returnVector(i, 4, v);
-			//the last thing we do is clear the vector
-			for (std::vector<int>::iterator it = v.end(); it != v.begin(); it--)
-			{
-				if (*it != -1)
-				{
-					gene[i][*it] = 0;
-					gene[*it][i] = 0;
-				}
-				v.pop_back();
-			}
-		}
-		/*Bidirectionality
-		Start from bottom due to having already fixed the lower part of the matrix
-		We note that an object cannot touch itself, so the identity matrix is blanked*/
-		for (int i = (rows - 1); i>0; i--)
-			for (int j = (columns - 1); j > 0; j--)
-			{
-			gene[j][i] = gene[i][j];
-			if (i == j)
-				gene[i][j] = 0;
-			}
-	}
-
-};
-/*Score should only be run after doPhysics()*/
-double Clock::Score()
-{
-	double score, physics;
-	int gears, pendula, arms;  //number of each
-
+	clockGenome.resize(genomeSize);
 	score = 0;
-	/*An arm > pendula > nothing
-	  All gears bound make score == 0
-	  Each arm/pendula is worth some multiplier times how accurate it is*/
-	/*First begin with a circuit algol.
-	  Then do time accuracy*/
+	numHands = 0;
+	genesize = genomeSize; //to pass down to children clocks
 
-/* Check for a pendulum: a hand that is attached to the base
-% that hand may be attached to a gear, but that gear cannot
-% be attached to anything else. In this simple simulation a pendulum is
-% the only form that can create regular motion, this is a simple fact.
-% If we don't find one there is no need to go on as the clock will not
-% work no matter how the remaining components are connected.
-*/
-	int p_count = 0;  //number of pendula
-	double s = 0;
-	double pend[6][3];
-	std::vector<double> g;
-	std::vector<double> g2;
-
-	for(int h=0;h<7;++h)
-		for(int a=0;a<3;++a)
-			pend[h][a] = 0;
-
-	for(int h=30;h<37;++h)
+	/*Fill the genome with random pieces, including null*/
+	for (int i = 0; i < genomeSize; i++)
 	{
-		if(gene[40][h] != 0)  //base is attached to a pendula
+		clockGenome[i].resize(genomeSize);
+		for (int j = 0; j < genomeSize; j++)
 		{
-			for(int a=0;a<30;++a)  //pendula is attached to a gear
-			{
-				if(gene[h][a] != 0)
-					g.push_back(gene[h][a]);  //useless
-			}
-			//g=find(conn(h,1:30) != 0);  //see if the base/hand combo is attached to a gear
-			if(g.size() == 0) // no pendula
-				continue;
-		}
-
-		for(int a=0;a<40;++a)
-		{
-			if(conn[g][a] != 0)  //this does not work, need an iterator to loop over g
-				g2.push_back(conn[g][a]);
-		}
-		if(g2.size() <= 1) //double check the <= 1 parameter
-		//if(length(find(conn(g,1:40) != 0)) <= 1)
-		{
-			s = gene[h][41]/1000;
-			if(s > 0)
-			{
-				p_count++;
-				pend[h][0] = h;
-				pend[h][1] = s;
-				pend[h][2] = 2.007*(s^(1/2));
-			}
+			ClockPiece temp;
+			clockGenome[i][j] = temp;
 		}
 	}
-	if(p_count == 0)
-		return score;
-
-	double min = pend[0][2];
-	for(int h=0;h<7;++h)
-	{
-		if(min < 0)
-			min *= -1;
-		if(min > pend[h][2])
-			min = pend[h][2];
-	}
-
-//Test for the pendulum(s) ability to tell various intervals of time.
-	double secpend,minpend,hrpend,daypend,weekpend,yearpend;
-	secpend = (1-min)/1;
-	minpend = (60-min)/60;
-	hrpend = (3600-min)/3600;
-	daypend = (86400-min)/86400;
-	weekpend = (604800-min)/604800;
-	yearpend = (31536000-min)/31536000;
-
-	if(min > 31536000)
-		score += 0;
-	else if(min > 604800)
-		score += 1/yearpend;
-	else if(min > 86400)
-		score += 1/weekpend + 1/yearpend;
-	else if(min > 3600)
-		score += 1/daypend + 1/weekpend + 1/yearpend;
-	else if(min > 60)
-		score += 1/hrpend + 1/daypend + 1/weekpend + 1/yearpend;
-	else if(min > 1)
-		score += 1/minpend + 1/hrpend + 1/daypend + 1/weekpend + 1/yearpend;
-	else //min has sub-second accuracy
-		score += 1/secpend + 1/minpend + 1/hrpend + 1/daypend + 1/weekpend + 1/yearpend;
-
-/* Let's search foward from the pendulum. The only way a pendulum can
-% transfer motion to gears is through a ratchet. We are not constraining
-% who connects where but if things don't line up in a functional way the
-% clock won't work and there is no need continuing the simulation. We
-% onlt simulate as far as we need to go. This saves computer time and
-% makes the code more compact.*/
-	return score;
 }
 
-/*Private function, only called by Score()*/
-int Clock::circuit(int startrow, int endrow)
+Clock::Clock(Clock Dad, Clock Mom)
 {
-	std::vector<int> Path;
-	std::priority_queue<int> openset;
-	std::tuple<int, int> 
-	bool IsGoal = false;
-	do
+	score = 0;
+	numHands = 0;
+	clockGenome.resize(Dad.genesize);
+	mutationRate = Dad.mutationRate;
+
+	for (int i = 0; i < genesize; i++)
 	{
-		for (int z = 0; z < startrow; z++)
+		clockGenome[i].resize(genesize);
+		for (int j = 0; j < genesize; j++)
 		{
-			if (gene[startrow][z] != 0)
-				openset.push(z);
+			//get genetic code from either mom or dad
+			if ((double)rand() / RAND_MAX > 0.5)
+			{
+				clockGenome[i][j] = Dad.clockGenome[i][j];
+			}
+			else
+			{
+				clockGenome[i][j] = Mom.clockGenome[i][j];
+			}
+			//mutate the sucker
+			if (((double)rand() / RAND_MAX) > (1 - (mutationRate / 100)))
+			{
+				ClockPiece temp;
+				clockGenome[i][j] = temp;
+			}
+			clockGenome[i][j].isConnected = false;
+			clockGenome[i][j].setIsPowered(false);
+			clockGenome[i][j].setIsAttoHand(false);
+			clockGenome[i][j].setPieceInterval(0);
 		}
-	} while (IsGoal == false);
-	return 0;//somthing;
+	}
+}
+
+double Clock::Score(bool output)
+{
+	int i, j, k, connectedPieces, notNullPieces;
+	connectedPieces = 0;
+	notNullPieces = 0;
+
+	bool pendConflict = false;
+	bool bestPendonTrain = false;
+	const int numScanTimes = 3;
+	bool isBroken = false;
+	double returnScore = 0.0;
+	double pendScore = 0.0;
+	double totalGearScore = 0.0;
+	double gearScore[3] = { 0, 0, 0 };
+
+	bool isTrainPowered = false;  //gear train powered by a spring
+
+	for (i = 0; i < genesize; i++)
+		for (j = 0; j < genesize; j++)
+			clockGenome[i][j].setPieceInterval(0);
+
+	//if a piece is alone, then the clock is broken
+	for (i = 0; i < genesize && !isBroken; i++)
+		for (j = 0; j < genesize; j++)
+			if (clockGenome[i][j].getPieceType() != pnull)
+			{
+				checkPieceConn(i, j);
+				isBroken = true;
+				break;
+			}
+
+	/*On first scan, count up the total pieces and connected pieces
+	  On second scan, check all pendula
+	  On third scan, check gear train.  This requires connectedPieces() from first scan*/
+	for (k = 1; k <= numScanTimes; k++)
+	{
+		isBroken = false;
+		for (i = 0; i < genesize && !isBroken; i++)
+		{
+			for (j = 0; j < genesize; j++)
+			{
+				if (1 == k)
+				{
+					notNullPieces += (clockGenome[i][j].getPieceType() != pnull);
+					connectedPieces += (clockGenome[i][j].isConnected && clockGenome[i][j].getPieceType() != pnull);
+				}
+				else if (2 == k)
+				{
+					if (clockGenome[i][j].getPieceType() == pendula)
+					{
+						double currentPendScore = checkPendulum(i, j);
+						pendConflict += (bestPendonTrain && isPendonTrain(i, j));
+
+						if (!bestPendonTrain)
+						{
+							if (currentPendScore > pendScore)
+							{
+								pendScore = currentPendScore;
+								bestPendulum = clockGenome[i][j];
+								bestPendonTrain - isPendonTrain(i, j);
+							}
+						}
+					}
+				}
+				else if (3 == k)
+				{
+					if (clockGenome[i][j].getPieceType() == gear && clockGenome[i][j].getPieceInterval() != 0)
+					{
+						double PendInterval = clockGenome[i][j].getPieceInterval() / (double)clockGenome[i][j].getNumTeeth();
+						calcGearInfo(i, j, PendInterval);
+						isBroken = true;
+						break;
+					}
+				}
+			}
+		}
+
+		/*The clock's genome is divided in two*/
+		if (notNullPieces != connectedPieces)
+		{
+			if (output)
+				outputClockInfo();
+			return 0;
+		}
+	}
+
+	if (geartrain.size() > 0)
+	{
+		for (i = 0; i < (signed int)geartrain.size(); i++)
+		{
+			if (pendConflict)
+			{
+				totalGearScore = 0;
+				gearScore[0] = 0;
+				gearScore[1] = 0;
+				gearScore[2] = 0;
+				geartrain.clear();
+				break;
+			}
+			else
+			{
+				//only one gear, and powered by spring
+				isTrainPowered += geartrain[i].getIsPowered();
+				for (j = 0; j < 3; j++)
+				{
+					double currentGearScore = scorediff(geartrain[i].getPieceInterval(), timeInterval[j]);
+
+					//hand mod
+					if (geartrain[i].getIsAtHand())
+						currentGearScore *= 100; //changed this value?
+					if (currentGearScore > gearScore[j]
+						&& timeGears[0].getPieceInterval() != geartrain[i].getPieceInterval()
+						&& timeGears[1].getPieceInterval() != geartrain[i].getPieceInterval()
+						&& timeGears[2].getPieceInterval() != geartrain[i].getPieceInterval())
+					{
+						gearScore[j] = currentGearScore;
+						gear[j] = geartrain[i];
+					}
+				}
+			}
+		}
+	}
+
+	/*Store number of working hands*/
+	//numHands = gear[0].get;
+
+	totalGearScore = gearScore[0] + gearScore[1] + gearScore[2];
+
+	//if the train is powered, add a score multiplier
+	if (isTrainPowered)
+		totalGearScore *= 100;
+
+	//if gear train exists, add a score multiplier
+	if (geartrain.size() > 0)
+		totalGearScore *= 10;
+
+	returnScore += totalGearScore;
+	returnScore += pendScore;
+	returnScore += (geartrain.size() / 100);
+	returnScore -= (notNullPieces / 100);
+
+	if (returnScore < 0)
+		returnScore = 0;
+
+	score = returnScore;
+
+	if (output)
+		outputClockInfo();
+	geartrain.clear();
+
+	return returnScore;
+}
+
+/*
+bool hasGearTrain()
+{
+	return (this.timeGear[0].getPieceInterval() > 0
+		|| this.timeGear[1].getPieceInterval() > 0
+		|| this.timeGear[2].getPieceInterval() > 0);
+}*/
+
+void Clock::checkPieceConn(int x, int y)
+{
+	clockGenome[x][y].isConnected = true;
+	for (int i = -1; i <= 1; i++)
+		for (int j = -1; j <= 1; j++)
+			if ((0 == i) != (0 == j))
+				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
+					if (clockGenome[x + i][y + j].getPieceType != pnull && clockGenome[x + i][y + j].isConnected == false)
+						checkPieceConn(x + i, y + j);
+}
+
+double Clock::checkPendulum(int x, int y)
+{
+	int numConnections = 0;
+	double returnScore = 0;
+
+	/*We check to see if the pendula can swing freely by checking adj. pieces*/
+	for (int i = -1; i <= 1; i++)
+		for (int j = -1; j <= 1; j++)
+			if ((0 == i) != (0 == j))
+				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
+					if (clockGenome[x + i][y + j].getPieceType != pnull)
+						numConnections++;
+	if (numConnections != 1)
+		return 0;
+	else
+	{
+		double pendPeriod = 2 * Pi* sqrt(clockGenome[x][y].getPendulumLength() / g);
+		returnScore = scorediff(pendPeriod, 1);
+		clockGenome[x][y].setPieceInterval(pendPeriod);
+		return returnScore;
+	}
+}
+
+bool Clock::checkRatchet(int x, int y)
+{
+	int workingPendulums = 0;
+	int gears = 0;
+	int nullPieces = 0;
+	int attachedGearX = 0;
+	int attachedGearY = 0;
+	int attachedPendulumX = 0;
+	int attachedPendulumY = 0;
+
+	/*Check to see if ratchet is attached to only one gear and one pendula*/
+	for (int i = -1; i <= 1; i++)
+	{
+		for (int j = -1; j <= 1; j++)
+		{
+			if ((0 == i) != (0 == j))
+			{
+				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
+				{
+					if (clockGenome[x + i][y + j].getPieceType() == pnull)
+					{
+						nullPieces++;
+					}
+					if (clockGenome[x + i][y + j].getPieceType == pendulum && clockGenome[x + i][y + j].getPieceInterval() != 0)
+					{
+						workingPendulums++;
+						attachedPendulumX = x + i;
+						attachedPendulumY = y + j;
+					}
+					if (clockGenome[x + i][y + j].getPieceType() == gear)
+					{
+						gears++;
+						attachedGearX = x + i;
+						attachedGearY = y + j;
+					}
+				}
+			}
+		}
+	}
+
+	/*If attached to one working gear, and one pendulum, only*/
+	if (workingPendulums == 1 && gears == 1 && nullPieces == 2)
+	{
+		double attachedPendulumInterval = clockGenome[attachedPendulumX][attachedPendulumY].getPieceInterval();
+		int attachedGearNumTeeth = clockGenome[attachedGearX][attachedGearY].getNumTeeth();
+		clockGenome[attachedGearX][attachedGearY].setPieceInterval(attachedGearNumTeeth*attachedPendulumInterval);
+		return true;
+	}
+	return false;
+}
+
+void Clock::calcGearInfo(int x, int y, double attachedPendulumInterval)
+{
+	bool ispowered = false;
+	bool isconntohand = false;
+	double gearInterval = 0;
+	
+	gearInterval = (double)clockGenome[x][y].getNumTeeth()*attachedPendulumInterval;
+
+	for (int i = -1; i <= 1; i++)
+		for (int j = -1; j <= 1; j++)
+			if ((0 == i) != (0 == j))
+				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
+				{
+					if (clockGenome[x + i][y + j].getPieceType() == spring && !ispowered)
+						ispowered = checkMainspringorHand(x + i, y + j);
+					else if (clockGenome[x + i][y + j].getPieceType == hand && !isconntohand)
+						isconntohand = checkMainspringorHand(x + i, y + j);
+				}
+
+	//is it powered? attached to a hand?  what is the interval?
+	clockGenome[x][y].setIsPowered(ispowered);
+	clockGenome[x][y].setIsAttoHand(isconntohand);
+	clockGenome[x][y].setPieceInterval(gearInterval);
+
+	for (int i = -1; i <= 1; i++)
+		for (int j = -1; j <= 1; j++)
+			if ((0 == i) != (0 == j))
+				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
+					if (clockGenome[x + i][y + j].getPieceType != gear && clockGenome[x + i][y + j].getPieceInterval == 0)
+						calcGearInfo(x + i, y + j, attachedPendulumInterval);
+	geartrain.push_back(clockGenome[x][y]);
+}
+
+bool Clock::checkMainspringorHand(int x, int y)
+{
+	int attachedPieceCount = 0;
+	for (int i = -1; i <= 1; i++)
+		for (int j = -1; j <= 1; j++)
+			if ((0 == i) != (0 == j))
+				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
+					attachedPieceCount += (clockGenome[x + i][y + j].getPieceType() != pnull);
+	return (1 == attachedPieceCount);
+}
+
+bool Clock::isPendonTrain(int x, int y)
+{
+	for (int i = -1; i <= 1; i++)
+		for (int j = -1; j <= 1; j++)
+			if ((0 == i) != (0 == j))
+				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
+					if (clockGenome[x + i][y + j].getPieceType == ratchet)
+						if (checkRatchet(x + i, y + j))
+							return true;
+	return false;
+}
+/*
+void Clock::outputClockInfo()
+{
+	std::cout << "Total size of Clock" << this.notNullPieces << '\n';
+	std::cout << "Score of the Clock " << this.score << '\n';
+	//need pendulum, second, minute, hour intervals
+	//need # of sec, min, hr hands
+}*/
+
+double scorediff(int num1, int num2)
+{
+	double difference = num1 - num2;
+	if (difference < 0)
+		difference = -difference;
+	if (difference == 0)
+	{
+		//~(int)difference;
+		//sets difference to -1
+		/*
+		__asm
+		_mm256_xor_ps(difference, difference);
+		*/
+		difference = 0xffffffff;
+		return difference;
+	}
+
+	return (1 / difference);
 }
