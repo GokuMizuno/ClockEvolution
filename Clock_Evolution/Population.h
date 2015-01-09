@@ -1,12 +1,16 @@
+#ifndef POPULATON_H
+#define POPULATION_H
 #include "stdfax.h"
 
 class Population
 {
 private:
-	Clocks[] individuals;
+	std::vector<Clock> individuals;
 public:
-	Population(int, bool);
-	Clock getIndividual(int);
-	Clock getWorst(Clock, Clock, Clock);
-	Clock saveIndividual(int, Clock);
+	//Population();
+	Population(varData, bool);
+	void mate(varData);
+	void outputVitals(varData);
 };
+
+#endif

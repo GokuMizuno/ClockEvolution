@@ -1,26 +1,22 @@
 #include "stdfax.h"
 using std::vector;
 
+varData GetWorldData();
+
 int main()
 {
 	//Initialize random number generator from cstdlib
 	srand(time(NULL));
 
-	int fromfile, generation, total_clocks, current_mating;
-	generation = 0;
-	current_mating = 0;
-	total_clocks = 100;  //debugging.  Allow to change
+	/*See if it is a new run, or loading from a file.*/
 
-	/*Clocklist holds a pointer to each clock.  Compare(*float,*float,*float) draws 3 pointers from this list
-	  Using a vector allows for linear element searching
-	  Each pointer should have a flag that marks each clock as being used or free.
-	  Flag is Clock.flag().  0 = free, 1 = used*/
-	//vector<Clock> clocklist;  //or is it vector<int> clocklist
-	//clocklist.reserve(10000);
-
-	/*See if the project is new, or being loaded
-	  this is what the fromfile variable is for.  Currently not implemented.
-	  If loaded, get load function from SaveLoad.cpp*/
+	varData worldData;
+	/*New data*/
+	worldData = GetWorldData();
+	/*From file*/
+	/*Get the bloody thing working first, then get save/load working*/
+	//worldData = SaveLoad(1); //0 for save, 1 for load
+	/*Need to return both world data, as well as a vector of clocks*/
 
 	/*There are X clocks in the pool, and we will call a generation done once X matings have been performed.
 	The program will terminate after X generations.  Matings will be done via straight up competition.  We take
@@ -28,52 +24,87 @@ int main()
 	of the two better ones is created in its stead.  The offspring is given a random mutation or two, its generation
 	number is updated, and all three are returned to the pool.  Rinse and repeat until done.*/
 	/*Since this will eventually be multithreaded and CUDAfied, there should be a way to lock a clock to a core, so
-	the same clock is not used more than once in a given time*/
+	the same clock is not used more than once in a given comparison*/
 	//Save every 10 generations
-	//replace while loop with a for loop; title of save file contains gen. name.
 
-	Clock *foo;
-	foo = new Clock[total_clocks];
-	for(int n=0;n<2;++n)
-	{
-		std::cout << "Clock " << n << std::endl;
-		foo[n].show();
-	}
-
-	mutate(foo[0]);
-	foo[0].show();
+	Population clockPop(worldData, 0);
 	
-	while(generation < total_clocks) //generation
+	while(worldData.currentGeneration < worldData.numGenerations) //generation
 	{
-		while(current_mating < total_clocks) //matings per generation
-		{
-			vector<int> nums;
-			Clock plist[3]; //replace with array that holds addresses, and pass that array?
-			Clock *ptr0, *ptr1, *ptr2;
-			for(int i=0;i<3;i++)
-			{
-				nums.push_back(rand()%total_clocks);
-				if(foo[nums.at(i)].isLocked() == 0)
-				{
-					foo[i].Lock();
-					plist[i] = foo[i];
-				}
-				else
-					i--;  //repeat
-			}
-			*ptr0 = plist[0];
-			*ptr1 = plist[1];
-			*ptr2 = plist[2];
-			mate(*ptr0,*ptr1,*ptr2);//the list of the three locked clocks.
-			for(int i=0;i<3;++i)
-				foo[i].Unlock();
-
-			current_mating++;
-		}
-		generation++;
+		clockPop.mate(worldData);
+		worldData.currentGeneration++;
 	}
 
-	delete[] foo;
 	return 0;
 }
 
+varData GetWorldData()
+{
+	varData data;
+	int num;
+	/*Defaults*/
+	data.currentGeneration = 0;
+	data.numGenerations = 1000;
+	data.genomeSize = 10;
+	data.mutationRate = 0.1;
+	data.populationSize = 1000;
+	strcpy(data.fileloc, "clockdata.dat");
+
+	std::cout << "Type the number in front of the data you would like to change.  0 begins the simulation.\n";
+	std::cout << "1 = Number of generations " << data.numGenerations << std::endl;
+	std::cout << "2 = Size of the population " << data.populationSize << std::endl;
+	std::cout << "3 = Size of the genome " << data.genomeSize << std::endl;
+	std::cout << "4 = The mutation rate is " << data.mutationRate << std::endl;
+	std::cout << "5 = Name and relative path of save file " << data.fileloc << std::endl;
+	switch (num)
+	{
+	case 1:
+		std::cout << "Please enter the number of generations.\n";
+		std::cin >> num;
+		if (num <= 0)
+		{
+			std::cout << "Haha.  Loading a trunk monkey in your car.\n";
+			data.numGenerations = 1;
+		}
+	case 2:
+		std::cout << "Please enter the size of the population.\n";
+		std::cin >> num;
+		if (num <= 0)
+		{
+			std::cout << "Haha.  Loading a trunk monkey in your car.\n";
+			data.populationSize = 3;
+		}
+	case 3:
+		std::cout << "Please enter the size of the genome.\n";
+		std::cin >> num;
+		if (num <= 0)
+		{
+			std::cout << "Haha.  Loading a trunk monkey in your car.\n";
+			data.genomeSize = 1;
+		}
+	case 4:
+		std::cout << "Please enter the mutation rate as a whole number.  (rate of 0.5 is entered as 50.)\n";
+		std::cin >> num;
+		if ((num <= 0)||(num > 100))
+		{
+			std::cout << "Haha.  Loading a trunk monkey in your car\n";
+			data.mutationRate = 0.1;
+		}
+		else
+		{
+			data.mutationRate = (double)num / 100;
+		}
+	case 5:
+		char input[255];
+		std::cout << "For ease of access, the save file should be in the same directory as the program."
+			<< "  If you want to change the name of the file, feel free to do so here.\n";
+		std::cin >> input;
+		std::cin.ignore(80, '\n');
+		strcpy(data.fileloc, input);
+	case 0:
+	default:
+		break;
+	}
+
+	return data;
+}

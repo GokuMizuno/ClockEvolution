@@ -1,5 +1,6 @@
 #ifndef CLOCK_H
 #define CLOCK_H
+#include "stdfax.h"
 /*This holds the declarations of the clock class, which is in Clock.cpp*/
 /*Best practices:
   Include header guards
@@ -7,18 +8,16 @@
   Headers should only be used for declarations.
   Do not define functions.
   Headers should have a specific purpose.*/
+
 class ClockPiece
 {
+	friend class Clock;
 private:
-	const int pnull = 0;
-	const int ratchet = 1;
-	const int spring = 2;
-	const int gear = 3;
-	const int hand = 4;
-	const int pendulum = 5;
-	const int numUniqueParts = 6;
-	const int minGearTeeth = 4;
-	const int timeInterval[3] = { 60, 3600, 43200 }; //min,hr,day
+	enum parts { pnull, ratchet, spring, gear, hand, pendulum};
+	int numUniqueParts = 6;
+	int minGearTeeth = 4;
+	//static const int timeInterval[3] = { 60, 3600, 43200 }; //min,hr,day
+	const static int timeInterval[3];
 	int PieceType;
 	double PendulumLength; //less than 1
 	double PieceInterval;  //pendulum and gear rotational period
@@ -46,7 +45,8 @@ public:
 	Clock(int);	//constructor
 	Clock(Clock, Clock);
 	double Score(bool output = false);
-	void setMutationRate(double mutationRate) { mMutationRate = mutationRate; };
+	double scorediff(int, int);
+	void setMutationRate(double mRate) { mutationRate = mRate; };
 	ClockPiece getClockPiece(int x, int y) { return clockGenome[x][y]; };
 	ClockPiece getBestPendulum() { return bestPendulum; };
 	ClockPiece getTimeGear(int index) { return geartrain[index]; };
@@ -61,20 +61,6 @@ public:
 	bool isLocked();
 	void Lock();
 	void unLock();
-	/*The below are not needed.*/
-	void setDimensions(int, int);
-	friend void mate(Clock&, Clock&, Clock&);
-	friend void mate(Clock*);
-	friend void mutate(Clock&);
-	class Heutristic
-	{
-		virtual void Start(int, int) = 0;
-		virtual int Calculate(int, int) = 0;
-		virtual bool IsGoal() { return true; };
-		virtual bool IsCancel(int) = 0;  //is this needed?
-		virtual bool Step() = 0;
-		virtual ~Heutristic(){};
-	};
 protected:
 	int genesize;
 	double mutationRate;

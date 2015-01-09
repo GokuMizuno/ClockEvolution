@@ -1,6 +1,7 @@
 #include "stdfax.h"
 ClockPiece::ClockPiece()
 {
+	const static int timeInterval[3] = { 60, 3600, 43200 };
 	PieceType = rand() % numUniqueParts;
 	PieceInterval = 0;
 	PendulumLength = 0;
@@ -97,7 +98,7 @@ double Clock::Score(bool output)
 	//if a piece is alone, then the clock is broken
 	for (i = 0; i < genesize && !isBroken; i++)
 		for (j = 0; j < genesize; j++)
-			if (clockGenome[i][j].getPieceType() != pnull)
+			if (clockGenome[i][j].getPieceType() != ClockPiece::pnull)
 			{
 				checkPieceConn(i, j);
 				isBroken = true;
@@ -116,8 +117,8 @@ double Clock::Score(bool output)
 			{
 				if (1 == k)
 				{
-					notNullPieces += (clockGenome[i][j].getPieceType() != pnull);
-					connectedPieces += (clockGenome[i][j].isConnected && clockGenome[i][j].getPieceType() != pnull);
+					notNullPieces += (clockGenome[i][j].getPieceType() !=ClockPiece::pnull);
+					connectedPieces += (clockGenome[i][j].isConnected && clockGenome[i][j].getPieceType() != ClockPiece::pnull);
 				}
 				else if (2 == k)
 				{
@@ -132,14 +133,14 @@ double Clock::Score(bool output)
 							{
 								pendScore = currentPendScore;
 								bestPendulum = clockGenome[i][j];
-								bestPendonTrain - isPendonTrain(i, j);
+								bestPendonTrain = isPendonTrain(i, j);
 							}
 						}
 					}
 				}
 				else if (3 == k)
 				{
-					if (clockGenome[i][j].getPieceType() == gear && clockGenome[i][j].getPieceInterval() != 0)
+					if (clockGenome[i][j].getPieceType() == ClockPiece::gear && clockGenome[i][j].getPieceInterval() != 0)
 					{
 						double PendInterval = clockGenome[i][j].getPieceInterval() / (double)clockGenome[i][j].getNumTeeth();
 						calcGearInfo(i, j, PendInterval);
@@ -151,12 +152,12 @@ double Clock::Score(bool output)
 		}
 
 		/*The clock's genome is divided in two*/
-		if (notNullPieces != connectedPieces)
+		/*if (notNullPieces != connectedPieces)
 		{
 			if (output)
 				outputClockInfo();
 			return 0;
-		}
+		}*/
 	}
 
 	if (geartrain.size() > 0)
@@ -178,7 +179,7 @@ double Clock::Score(bool output)
 				isTrainPowered += geartrain[i].getIsPowered();
 				for (j = 0; j < 3; j++)
 				{
-					double currentGearScore = scorediff(geartrain[i].getPieceInterval(), timeInterval[j]);
+					double currentGearScore = scorediff(geartrain[i].getPieceInterval(), ClockPiece::timeInterval[j]);
 
 					//hand mod
 					if (geartrain[i].getIsAtHand())
@@ -189,7 +190,7 @@ double Clock::Score(bool output)
 						&& timeGears[2].getPieceInterval() != geartrain[i].getPieceInterval())
 					{
 						gearScore[j] = currentGearScore;
-						gear[j] = geartrain[i];
+						timeGears[j] = geartrain[i];
 					}
 				}
 			}
@@ -219,8 +220,8 @@ double Clock::Score(bool output)
 
 	score = returnScore;
 
-	if (output)
-		outputClockInfo();
+	/*if (output)
+		outputClockInfo();*/
 	geartrain.clear();
 
 	return returnScore;
@@ -241,7 +242,7 @@ void Clock::checkPieceConn(int x, int y)
 		for (int j = -1; j <= 1; j++)
 			if ((0 == i) != (0 == j))
 				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
-					if (clockGenome[x + i][y + j].getPieceType != pnull && clockGenome[x + i][y + j].isConnected == false)
+					if (clockGenome[x + i][y + j].getPieceType != ClockPiece::pnull && clockGenome[x + i][y + j].isConnected == false)
 						checkPieceConn(x + i, y + j);
 }
 
@@ -255,7 +256,7 @@ double Clock::checkPendulum(int x, int y)
 		for (int j = -1; j <= 1; j++)
 			if ((0 == i) != (0 == j))
 				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
-					if (clockGenome[x + i][y + j].getPieceType != pnull)
+					if (clockGenome[x + i][y + j].getPieceType != ClockPiece::pnull)
 						numConnections++;
 	if (numConnections != 1)
 		return 0;
@@ -287,17 +288,17 @@ bool Clock::checkRatchet(int x, int y)
 			{
 				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
 				{
-					if (clockGenome[x + i][y + j].getPieceType() == pnull)
+					if (clockGenome[x + i][y + j].getPieceType() == ClockPiece::pnull)
 					{
 						nullPieces++;
 					}
-					if (clockGenome[x + i][y + j].getPieceType == pendulum && clockGenome[x + i][y + j].getPieceInterval() != 0)
+					if (clockGenome[x + i][y + j].getPieceType() == ClockPiece::pendulum && clockGenome[x + i][y + j].getPieceInterval() != 0)
 					{
 						workingPendulums++;
 						attachedPendulumX = x + i;
 						attachedPendulumY = y + j;
 					}
-					if (clockGenome[x + i][y + j].getPieceType() == gear)
+					if (clockGenome[x + i][y + j].getPieceType() == ClockPiece::gear)
 					{
 						gears++;
 						attachedGearX = x + i;
@@ -332,9 +333,9 @@ void Clock::calcGearInfo(int x, int y, double attachedPendulumInterval)
 			if ((0 == i) != (0 == j))
 				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
 				{
-					if (clockGenome[x + i][y + j].getPieceType() == spring && !ispowered)
+					if (clockGenome[x + i][y + j].getPieceType() == ClockPiece::spring && !ispowered)
 						ispowered = checkMainspringorHand(x + i, y + j);
-					else if (clockGenome[x + i][y + j].getPieceType == hand && !isconntohand)
+					else if (clockGenome[x + i][y + j].getPieceType() == ClockPiece::hand && !isconntohand)
 						isconntohand = checkMainspringorHand(x + i, y + j);
 				}
 
@@ -347,7 +348,7 @@ void Clock::calcGearInfo(int x, int y, double attachedPendulumInterval)
 		for (int j = -1; j <= 1; j++)
 			if ((0 == i) != (0 == j))
 				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
-					if (clockGenome[x + i][y + j].getPieceType != gear && clockGenome[x + i][y + j].getPieceInterval == 0)
+					if (clockGenome[x + i][y + j].getPieceType() != ClockPiece::gear && clockGenome[x + i][y + j].getPieceInterval() == 0)
 						calcGearInfo(x + i, y + j, attachedPendulumInterval);
 	geartrain.push_back(clockGenome[x][y]);
 }
@@ -359,7 +360,7 @@ bool Clock::checkMainspringorHand(int x, int y)
 		for (int j = -1; j <= 1; j++)
 			if ((0 == i) != (0 == j))
 				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
-					attachedPieceCount += (clockGenome[x + i][y + j].getPieceType() != pnull);
+					attachedPieceCount += (clockGenome[x + i][y + j].getPieceType() != ClockPiece::pnull);
 	return (1 == attachedPieceCount);
 }
 
@@ -369,7 +370,7 @@ bool Clock::isPendonTrain(int x, int y)
 		for (int j = -1; j <= 1; j++)
 			if ((0 == i) != (0 == j))
 				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
-					if (clockGenome[x + i][y + j].getPieceType == ratchet)
+					if (clockGenome[x + i][y + j].getPieceType() == ClockPiece::ratchet)
 						if (checkRatchet(x + i, y + j))
 							return true;
 	return false;
@@ -383,7 +384,7 @@ void Clock::outputClockInfo()
 	//need # of sec, min, hr hands
 }*/
 
-double scorediff(int num1, int num2)
+double Clock::scorediff(int num1, int num2)
 {
 	double difference = num1 - num2;
 	if (difference < 0)
