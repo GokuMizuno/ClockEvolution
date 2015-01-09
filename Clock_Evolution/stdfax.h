@@ -7,7 +7,7 @@
 #include <cstdlib> //rand()
 #include <vector>
 #include "clock.h"
-#include "Population.h"
+//#include "Population.h"
 
 struct varData
 {

@@ -1,4 +1,5 @@
-#include "stdfax.h"
+//#include "stdfax.h"
+#include "Population.h"
 Population::Population(varData worldData, bool init)
 {
 	  individuals.reserve(worldData.populationSize);

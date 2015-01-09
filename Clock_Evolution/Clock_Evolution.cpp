@@ -1,4 +1,5 @@
 #include "stdfax.h"
+#include "Population.h"
 
 varData GetWorldData();
 
