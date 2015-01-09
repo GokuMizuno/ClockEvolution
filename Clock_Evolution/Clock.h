@@ -16,8 +16,8 @@ private:
 	enum parts { pnull, ratchet, spring, gear, hand, pendulum};
 	int numUniqueParts = 6;
 	int minGearTeeth = 4;
+	//Since VS13 cannot compile the below line, I fudged it by adding it to Clock::Score()
 	//static const int timeInterval[3] = { 60, 3600, 43200 }; //min,hr,day
-	const static int timeInterval[3];
 	int PieceType;
 	double PendulumLength; //less than 1
 	double PieceInterval;  //pendulum and gear rotational period
@@ -25,6 +25,7 @@ private:
 	bool isPowered;
 	bool isAttachedtoHand; //if a gear is attached to a hand (powers hand)
 public:
+	ClockPiece();// :timeInterval({ 60, 3600, 43200 }) {};
 	bool isConnected;
 	int getPieceType()  { return PieceType; };
 	double getPendulumLength() { return PendulumLength; };
@@ -35,13 +36,11 @@ public:
 	void setPieceInterval(double pieceInterval) { PieceInterval = pieceInterval; };
 	void setIsPowered(bool ispowered) { isPowered = ispowered; };
 	void setIsAttoHand(bool isathand) { isAttachedtoHand = isathand; };
-	ClockPiece();
+	//ClockPiece();
 };
 class Clock
 {
 public:
-	/*flag:  0 = free, 1 = being used (compared, mated, or mutated.)
-	  Lock when starting to use, unlock when done.*/
 	Clock(int);	//constructor
 	Clock(Clock, Clock);
 	double Score();
@@ -54,7 +53,7 @@ public:
 	//double getSurvivalScore() {return score;};
 	int getNumHands() { return numHands; };
 	bool hasGearTrain() { timeGears[0].getPieceInterval() > 0 || timeGears[1].getPieceInterval() > 0 || timeGears[2].getPieceInterval() > 0; };
-	~Clock();	//destructor
+	//~Clock();	//destructor
 	void show();//debugging
 	int generation();
 	void generation(int);

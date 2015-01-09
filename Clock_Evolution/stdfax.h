@@ -11,7 +11,7 @@
 
 struct varData
 {
-	varData();
+//	varData();
 	int numGenerations;
 	int currentGeneration;
 	int genomeSize;

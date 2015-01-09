@@ -17,7 +17,6 @@ Population::Population(varData worldData, bool init)
 
 void Population::mate(varData worldData)
 {
-
 	const int numCompetingClocks = 3;
 	const int c1 = 0;
 	const int c2 = 1;
@@ -128,7 +127,7 @@ void Population::outputVitals(varData worldData)
 	std::cout << "Average second hands: " << secGearHand << '\n';
 	std::cout << "Average minute hands: " << minGearHand << '\n';
 	std::cout << "Average hour hands: " << hrGearHand << '\n';
-	for (int j = 0; j < numHandsClock.size(); j++)
+	for (unsigned int j = 0; j < numHandsClock.size(); j++)
 		std::cout << "Average number of clocks with " << j << " hands: " << numHandsClock[j] << '\n';
 	std::cout << "Average number of working parts: " << avgWorkingParts << std::endl;
 };

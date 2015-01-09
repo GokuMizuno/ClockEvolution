@@ -48,7 +48,7 @@ varData GetWorldData()
 	data.genomeSize = 10;
 	data.mutationRate = 0.1;
 	data.populationSize = 1000;
-	strcpy(data.fileloc, "clockdata.dat");
+	strcpy_s(data.fileloc, "clockdata.dat");
 
 	std::cout << "Type the number in front of the data you would like to change.  0 begins the simulation.\n";
 	std::cout << "1 = Number of generations " << data.numGenerations << std::endl;
@@ -56,6 +56,7 @@ varData GetWorldData()
 	std::cout << "3 = Size of the genome " << data.genomeSize << std::endl;
 	std::cout << "4 = The mutation rate is " << data.mutationRate << std::endl;
 	std::cout << "5 = Name and relative path of save file " << data.fileloc << std::endl;
+	std::cin >> num;
 	switch (num)
 	{
 	case 1:
@@ -100,7 +101,7 @@ varData GetWorldData()
 			<< "  If you want to change the name of the file, feel free to do so here.\n";
 		std::cin >> input;
 		std::cin.ignore(80, '\n');
-		strcpy(data.fileloc, input);
+		strcpy_s(data.fileloc, input);
 	case 0:
 	default:
 		break;

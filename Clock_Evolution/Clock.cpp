@@ -1,7 +1,8 @@
 #include "stdfax.h"
+
 ClockPiece::ClockPiece()
 {
-	const static int timeInterval[3] = { 60, 3600, 43200 };
+//	const static int timeInterval[3] = { 60, 3600, 43200 };
 	PieceType = rand() % numUniqueParts;
 	PieceInterval = 0;
 	PendulumLength = 0;
@@ -79,7 +80,7 @@ double Clock::Score()
 	int i, j, k, connectedPieces, notNullPieces;
 	connectedPieces = 0;
 	notNullPieces = 0;
-
+	const int timeInterval[3] = { 60, 3600, 43200 };
 	bool pendConflict = false;
 	bool bestPendonTrain = false;
 	const int numScanTimes = 3;
@@ -179,7 +180,7 @@ double Clock::Score()
 				isTrainPowered += geartrain[i].getIsPowered();
 				for (j = 0; j < 3; j++)
 				{
-					double currentGearScore = scorediff(geartrain[i].getPieceInterval(), ClockPiece::timeInterval[j]);
+					double currentGearScore = scorediff(geartrain[i].getPieceInterval(), timeInterval[j]);
 
 					//hand mod
 					if (geartrain[i].getIsAtHand())
