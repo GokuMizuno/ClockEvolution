@@ -1,4 +1,4 @@
-#ifndef POPULATON_H
+#ifndef POPULATION_H
 #define POPULATION_H
 #include "stdfax.h"
 

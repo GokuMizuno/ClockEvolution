@@ -1,5 +1,4 @@
 #include "stdfax.h"
-using std::vector;
 
 varData GetWorldData();
 

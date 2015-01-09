@@ -1,6 +1,7 @@
 #include "stdfax.h"
 Population::Population(varData worldData, bool init)
 {
+	  individuals.reserve(worldData.populationSize);
 //	if (init)
 //	{
 		for (int i = 0; i < worldData.populationSize; i++)
