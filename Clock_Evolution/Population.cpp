@@ -5,6 +5,7 @@ Population::Population(varData worldData, bool init)
 //	{
 		for (int i = 0; i < worldData.populationSize; i++)
 		{
+			//Create an individual clock, and push onto the population vector, which we cleverly call individuals
 			Clock individual(worldData.genomeSize);
 			individual.setMutationRate(worldData.mutationRate);
 			individuals.push_back(individual);
@@ -47,7 +48,8 @@ void Population::mate(varData worldData)
 				selectedClocks[i] = randClock;
 			}
 			clockIndex[i] = randClock;
-			clockScores[i] = individuals[clockIndex[i]].Score();
+//			clockScores[i] = individuals[clockIndex[i]].Score();
+			clockScores[i] = individuals[randClock].Score();
 			//unlock the clock
 		}
 		//sorts the clocks by score

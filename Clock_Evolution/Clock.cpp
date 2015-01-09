@@ -74,7 +74,7 @@ Clock::Clock(Clock Dad, Clock Mom)
 	}
 }
 
-double Clock::Score(bool output)
+double Clock::Score()
 {
 	int i, j, k, connectedPieces, notNullPieces;
 	connectedPieces = 0;
@@ -242,7 +242,7 @@ void Clock::checkPieceConn(int x, int y)
 		for (int j = -1; j <= 1; j++)
 			if ((0 == i) != (0 == j))
 				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
-					if (clockGenome[x + i][y + j].getPieceType != ClockPiece::pnull && clockGenome[x + i][y + j].isConnected == false)
+					if (clockGenome[x + i][y + j].getPieceType() != ClockPiece::pnull && clockGenome[x + i][y + j].isConnected == false)
 						checkPieceConn(x + i, y + j);
 }
 
@@ -256,14 +256,14 @@ double Clock::checkPendulum(int x, int y)
 		for (int j = -1; j <= 1; j++)
 			if ((0 == i) != (0 == j))
 				if (x + i < genesize && x + i >= 0 && y + j < genesize && y + j >= 0)
-					if (clockGenome[x + i][y + j].getPieceType != ClockPiece::pnull)
+					if (clockGenome[x + i][y + j].getPieceType() != ClockPiece::pnull)
 						numConnections++;
 	if (numConnections != 1)
 		return 0;
 	else
 	{
 		double pendPeriod = 2 * Pi* sqrt(clockGenome[x][y].getPendulumLength() / g);
-		returnScore = scorediff(pendPeriod, 1);
+		returnScore = scorediff(pendPeriod, (double)1);
 		clockGenome[x][y].setPieceInterval(pendPeriod);
 		return returnScore;
 	}
@@ -384,7 +384,7 @@ void Clock::outputClockInfo()
 	//need # of sec, min, hr hands
 }*/
 
-double Clock::scorediff(int num1, int num2)
+double Clock::scorediff(double num1, double num2)
 {
 	double difference = num1 - num2;
 	if (difference < 0)

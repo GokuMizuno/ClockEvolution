@@ -44,8 +44,8 @@ public:
 	  Lock when starting to use, unlock when done.*/
 	Clock(int);	//constructor
 	Clock(Clock, Clock);
-	double Score(bool output = false);
-	double scorediff(int, int);
+	double Score();
+	double scorediff(double, double);
 	void setMutationRate(double mRate) { mutationRate = mRate; };
 	ClockPiece getClockPiece(int x, int y) { return clockGenome[x][y]; };
 	ClockPiece getBestPendulum() { return bestPendulum; };
