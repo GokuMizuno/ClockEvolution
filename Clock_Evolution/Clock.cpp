@@ -44,7 +44,8 @@ Clock::Clock(Clock Dad, Clock Mom)
 {
 	score = 0;
 	numHands = 0;
-	clockGenome.resize(Dad.genesize);
+	genesize = Dad.genesize;
+	clockGenome.resize(genesize);
 	mutationRate = Dad.mutationRate;
 
 	for (int i = 0; i < genesize; i++)

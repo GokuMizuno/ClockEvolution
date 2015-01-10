@@ -29,7 +29,7 @@ void Population::mate(varData worldData)
 	double tempScore;
 
 	//holds selected clocks
-	int selectedClocks[numCompetingClocks - 1] = { -1, 1 };
+	int selectedClocks[numCompetingClocks] = { -1, -1, -1 };
 	int randClock = 0;
 
 	//in a population of x clocks, a generation is defined by x matings
@@ -44,7 +44,10 @@ void Population::mate(varData worldData)
 
 			} while (selectedClocks[0] == randClock || selectedClocks[1] == randClock);
 			//don't forget to lock the clock
-			if (i != numCompetingClocks)
+			/*selectedClocks has elements 0,1; i is 0,1,2, numCompetingClocks is 3
+			To prevent running off the end of the array, we increase selectedClocks to
+			three elements, and just never use the third.*/
+			if ((i+1) != numCompetingClocks)
 			{
 				selectedClocks[i] = randClock;
 			}

@@ -32,6 +32,7 @@ int main()
 	while(worldData.currentGeneration < worldData.numGenerations) //generation
 	{
 		clockPop.mate(worldData);
+		clockPop.outputVitals(worldData);
 		worldData.currentGeneration++;
 	}
 
@@ -41,6 +42,7 @@ int main()
 varData GetWorldData()
 {
 	varData data;
+	bool flag = true;
 	int num;
 	/*Defaults*/
 	data.currentGeneration = 0;
@@ -50,62 +52,83 @@ varData GetWorldData()
 	data.populationSize = 1000;
 	strcpy_s(data.fileloc, "clockdata.dat");
 
-	std::cout << "Type the number in front of the data you would like to change.  0 begins the simulation.\n";
-	std::cout << "1 = Number of generations " << data.numGenerations << std::endl;
-	std::cout << "2 = Size of the population " << data.populationSize << std::endl;
-	std::cout << "3 = Size of the genome " << data.genomeSize << std::endl;
-	std::cout << "4 = The mutation rate is " << data.mutationRate << std::endl;
-	std::cout << "5 = Name and relative path of save file " << data.fileloc << std::endl;
-	std::cin >> num;
-	switch (num)
+	do
 	{
-	case 1:
-		std::cout << "Please enter the number of generations.\n";
+		std::cout << "Type the number in front of the data you would like to change.  0 begins the simulation.\n";
+		std::cout << "1 = Number of generations " << data.numGenerations << std::endl;
+		std::cout << "2 = Size of the population " << data.populationSize << std::endl;
+		std::cout << "3 = Size of the genome " << data.genomeSize << std::endl;
+		std::cout << "4 = The mutation rate is " << data.mutationRate << std::endl;
+		std::cout << "5 = Name and relative path of save file " << data.fileloc << std::endl;
 		std::cin >> num;
-		if (num <= 0)
+		switch (num)
 		{
-			std::cout << "Haha.  Loading a trunk monkey in your car.\n";
-			data.numGenerations = 1;
+		case 1:
+			std::cout << "Please enter the number of generations.\n";
+			std::cin >> num;
+			if (num <= 0)
+			{
+				std::cout << "Haha.  Loading a trunk monkey in your car.\n";
+				data.numGenerations = 1;
+			}
+			else
+			{
+				data.numGenerations = num;
+			}
+			break;
+		case 2:
+			std::cout << "Please enter the size of the population.\n";
+			std::cin >> num;
+			if (num <= 0)
+			{
+				std::cout << "Haha.  Loading a trunk monkey in your car.\n";
+				data.populationSize = 3;
+			}
+			else
+			{
+				data.populationSize = num;
+			}
+			break;
+		case 3:
+			std::cout << "Please enter the size of the genome.\n";
+			std::cin >> num;
+			if (num <= 0)
+			{
+				std::cout << "Haha.  Loading a trunk monkey in your car.\n";
+				data.genomeSize = 1;
+			}
+			else
+			{
+				data.genomeSize = num;
+			}
+			break;
+		case 4:
+			std::cout << "Please enter the mutation rate as a whole number.  (rate of 0.5 is entered as 50.)\n";
+			std::cin >> num;
+			if ((num <= 0) || (num > 100))
+			{
+				std::cout << "Haha.  Loading a trunk monkey in your car\n";
+				data.mutationRate = 0.1;
+			}
+			else
+			{
+				data.mutationRate = (double)num / 100;
+			}
+			break;
+		case 5:
+			char input[255];
+			std::cout << "For ease of access, the save file should be in the same directory as the program."
+				<< "  If you want to change the name of the file, feel free to do so here.\n";
+			std::cin >> input;
+			std::cin.ignore(80, '\n');
+			strcpy_s(data.fileloc, input);
+			break;
+		case 0:
+		default:
+			flag = false;
+			break;
 		}
-	case 2:
-		std::cout << "Please enter the size of the population.\n";
-		std::cin >> num;
-		if (num <= 0)
-		{
-			std::cout << "Haha.  Loading a trunk monkey in your car.\n";
-			data.populationSize = 3;
-		}
-	case 3:
-		std::cout << "Please enter the size of the genome.\n";
-		std::cin >> num;
-		if (num <= 0)
-		{
-			std::cout << "Haha.  Loading a trunk monkey in your car.\n";
-			data.genomeSize = 1;
-		}
-	case 4:
-		std::cout << "Please enter the mutation rate as a whole number.  (rate of 0.5 is entered as 50.)\n";
-		std::cin >> num;
-		if ((num <= 0)||(num > 100))
-		{
-			std::cout << "Haha.  Loading a trunk monkey in your car\n";
-			data.mutationRate = 0.1;
-		}
-		else
-		{
-			data.mutationRate = (double)num / 100;
-		}
-	case 5:
-		char input[255];
-		std::cout << "For ease of access, the save file should be in the same directory as the program."
-			<< "  If you want to change the name of the file, feel free to do so here.\n";
-		std::cin >> input;
-		std::cin.ignore(80, '\n');
-		strcpy_s(data.fileloc, input);
-	case 0:
-	default:
-		break;
-	}
+	} while (flag);
 
 	return data;
 }
