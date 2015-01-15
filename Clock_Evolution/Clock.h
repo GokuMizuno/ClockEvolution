@@ -48,22 +48,17 @@ public:
 	void setMutationRate(double mRate) { mutationRate = mRate; };
 	ClockPiece getClockPiece(int x, int y) { return clockGenome[x][y]; };
 	ClockPiece getBestPendulum() { return bestPendulum; };
-	ClockPiece getTimeGear(int index) { return geartrain[index]; };
+	ClockPiece getTimeGear(int index) { return timeGears[index]; };
 	int getNotNullPieces() { return notNullPieces; };
-	//double getSurvivalScore() {return score;};
 	int getNumHands() { return numHands; };
 	bool hasGearTrain() { timeGears[0].getPieceInterval() > 0 || timeGears[1].getPieceInterval() > 0 || timeGears[2].getPieceInterval() > 0; };
 	//~Clock();	//destructor
-	void show();//debugging
+	void show(int);
 	int generation();
 	void generation(int);
-	bool isLocked();
-	void Lock();
-	void unLock();
 protected:
 	int genesize;
 	double mutationRate;
-	bool flag;
 private:
 	std::vector<std::vector<ClockPiece>> clockGenome;
 	std::vector<ClockPiece> geartrain;
@@ -71,19 +66,12 @@ private:
 	ClockPiece timeGears[3]; //stores the second, minute, and hour gears
 	int numHands;
 	int notNullPieces;  //num of genome spots that are filled with ClockPieces
-	/*Next three are contained in doPhysics()*/
 	void checkPieceConn(int, int);
 	double checkPendulum(int, int);
 	bool isPendonTrain(int, int);
 	bool checkRatchet(int, int);
 	void calcGearInfo(int, int, double);
 	bool checkMainspringorHand(int, int);
-	double mrand();  //from here on out, is old work
-	void doPhysics();
-	int isBound;
-	int gen;
-	int pendula;
-	int arms;
 	double score;
 };
 

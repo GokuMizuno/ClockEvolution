@@ -11,6 +11,7 @@ public:
 	Population(varData, bool);
 	void mate(varData);
 	void outputVitals(varData);
+	void showClock(int);
 };
 
 #endif

@@ -78,7 +78,7 @@ Clock::Clock(Clock Dad, Clock Mom)
 
 double Clock::Score()
 {
-	int i, j, k, connectedPieces, notNullPieces;
+	int i, j, k, connectedPieces;
 	connectedPieces = 0;
 	notNullPieces = 0;
 	const int timeInterval[3] = { 60, 3600, 43200 };
@@ -124,7 +124,7 @@ double Clock::Score()
 				}
 				else if (2 == k)
 				{
-					if (clockGenome[i][j].getPieceType() == pendula)
+					if (clockGenome[i][j].getPieceType() == ClockPiece::pendulum)
 					{
 						double currentPendScore = checkPendulum(i, j);
 						pendConflict += (bestPendonTrain && isPendonTrain(i, j));
@@ -152,14 +152,6 @@ double Clock::Score()
 				}
 			}
 		}
-
-		/*The clock's genome is divided in two*/
-		/*if (notNullPieces != connectedPieces)
-		{
-			if (output)
-				outputClockInfo();
-			return 0;
-		}*/
 	}
 
 	if (geartrain.size() > 0)
@@ -200,7 +192,7 @@ double Clock::Score()
 	}
 
 	/*Store number of working hands*/
-	//numHands = gear[0].get;
+	numHands = timeGears[0].getIsAtHand() + timeGears[1].getIsAtHand() + timeGears[2].getIsAtHand();
 
 	totalGearScore = gearScore[0] + gearScore[1] + gearScore[2];
 
@@ -221,11 +213,7 @@ double Clock::Score()
 		returnScore = 0;
 
 	score = returnScore;
-
-	/*if (output)
-		outputClockInfo();*/
 	geartrain.clear();
-
 	return returnScore;
 }
 
@@ -377,31 +365,55 @@ bool Clock::isPendonTrain(int x, int y)
 							return true;
 	return false;
 }
-/*
-void Clock::outputClockInfo()
-{
-	std::cout << "Total size of Clock" << this.notNullPieces << '\n';
-	std::cout << "Score of the Clock " << this.score << '\n';
-	//need pendulum, second, minute, hour intervals
-	//need # of sec, min, hr hands
-}*/
 
 double Clock::scorediff(double num1, double num2)
 {
 	double difference = num1 - num2;
 	if (difference < 0)
 		difference = -difference;
-	if (difference == 0)
+	if (difference < 0.00001)  //account for rounding errors
 	{
-		//~(int)difference;
-		//sets difference to -1
-		/*
-		__asm
-		_mm256_xor_ps(difference, difference);
-		*/
-		difference = 0xffffffff;
+		difference = 5000000.0;
 		return difference;
 	}
+	return (1/difference);
+}
 
-	return (1 / difference);
+void Clock::show(int num)
+{
+	for (int x = 0; x < clockGenome.size(); x++)
+	{
+		for (int y = 0; y < clockGenome.size(); y++)
+		{
+			ClockPiece output = getClockPiece(x, y);
+			if (output.getPieceType() != ClockPiece::pnull)
+			{
+				if (output.getPieceType() == ClockPiece::ratchet)
+					std::cout << "R";
+				if (output.getPieceType() == ClockPiece::gear)
+					std::cout << "G";
+				if (output.getPieceType() == ClockPiece::spring)
+					std::cout << "S";
+				if (output.getPieceType() == ClockPiece::hand)
+					std::cout << "H";
+				if (output.getPieceType() == ClockPiece::pendulum)
+					std::cout << "P";
+			}
+			else
+				std::cout << " ";
+		}
+		std::cout << std::endl;
+	}
+	std::cout << "Clock " << num << "has a score of " << Score() << '\n';
+	if (0 != Score())
+	{
+		std::cout << "Pendulum interval:  " << bestPendulum.getPieceInterval() << '\n';
+		std::cout << "Second gear interval:  " << getTimeGear(0).getPieceInterval() << '\n';
+		std::cout << "Minute gear interval:  " << getTimeGear(1).getPieceInterval() << '\n';
+		std::cout << "Hour gear interval:  " << getTimeGear(2).getPieceInterval() << '\n';
+		std::cout << "Working second hand:  " << getTimeGear(0).getIsAtHand() << '\n';
+		std::cout << "Working minute hand:  " << getTimeGear(1).getIsAtHand() << '\n';
+		std::cout << "Working hour hand:  " << getTimeGear(2).getIsAtHand() << '\n';
+		std::cout << "Number of pieces: " << notNullPieces << std::endl;
+	}
 }

@@ -88,8 +88,7 @@ void Population::outputVitals(varData worldData)
 	double bestPend = 0, secGearInt = 0, minGearInt = 0, hrGearInt = 0,
 		avgWorkingParts = 0, secGearHand = 0, minGearHand = 0, hrGearHand = 0,
 		avgScore = 0, numDead = 0, numPend = 0, numGear = 0;
-	std::vector<int> numHandsClock;
-	numHandsClock.reserve(5);
+	std::vector<int> numHandsClock (5);
 
 	for (int i = 0; i < worldData.populationSize; i++)
 	{
@@ -105,22 +104,38 @@ void Population::outputVitals(varData worldData)
 			hrGearHand += individuals[i].getTimeGear(2).getIsAtHand();
 			avgWorkingParts += individuals[i].getNotNullPieces();
 		}
-		numDead += (individuals[i].Score() == 0);
+		else
+			numDead++;
 		if (individuals[i].getBestPendulum().getPieceInterval() != 0 && individuals[i].getNumHands() == 0)
 			numGear++;
 		numHandsClock[individuals[i].getNumHands()] += 1;
 	}
 
-	//Get the averages
-	avgScore /= (worldData.populationSize - numDead);
-	bestPend /= (worldData.populationSize - numDead);
-	secGearInt /= (worldData.populationSize - numDead);
-	minGearInt /= (worldData.populationSize - numDead);
-	hrGearInt /= (worldData.populationSize - numDead);
-	secGearHand /= (worldData.populationSize - numDead);
-	minGearHand /= (worldData.populationSize - numDead);
-	hrGearHand /= (worldData.populationSize - numDead);
-	avgWorkingParts /= (worldData.populationSize - numDead);
+	if (0 == (worldData.populationSize - numDead))
+	{
+		avgScore = 0;
+		bestPend = 0;
+		secGearInt = 0;
+		minGearInt = 0;
+		hrGearInt = 0;
+		secGearHand = 0;
+		minGearHand = 0;
+		hrGearHand = 0;
+		avgWorkingParts = 0;
+	}
+	else
+	{
+		//Get the averages
+		avgScore /= (worldData.populationSize - numDead);
+		bestPend /= (worldData.populationSize - numDead);
+		secGearInt /= (worldData.populationSize - numDead);
+		minGearInt /= (worldData.populationSize - numDead);
+		hrGearInt /= (worldData.populationSize - numDead);
+		secGearHand /= (worldData.populationSize - numDead);
+		minGearHand /= (worldData.populationSize - numDead);
+		hrGearHand /= (worldData.populationSize - numDead);
+		avgWorkingParts /= (worldData.populationSize - numDead);
+	}
 	
 	std::cout << "Average score for generation: " << worldData.currentGeneration << " is " << avgScore << '\n';
 	std::cout << "Average pendulum accuracy: " << bestPend << '\n';
@@ -134,3 +149,8 @@ void Population::outputVitals(varData worldData)
 		std::cout << "Average number of clocks with " << j << " hands: " << numHandsClock[j] << '\n';
 	std::cout << "Average number of working parts: " << avgWorkingParts << std::endl;
 };
+
+void Population::showClock(int number)
+{
+	individuals.at(number).show(number);
+}

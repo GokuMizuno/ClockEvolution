@@ -32,6 +32,8 @@ int main()
 	while(worldData.currentGeneration < worldData.numGenerations) //generation
 	{
 		clockPop.mate(worldData);
+		if (worldData.currentGeneration & 0x8)
+			clockPop.showClock(2); //shows clock #2 every 8th generation
 		clockPop.outputVitals(worldData);
 		worldData.currentGeneration++;
 	}
@@ -77,6 +79,7 @@ varData GetWorldData()
 			}
 			break;
 		case 2:
+			//This needs to be changed to accomodate number of cores
 			std::cout << "Please enter the size of the population.\n";
 			std::cin >> num;
 			if (num <= 0)
